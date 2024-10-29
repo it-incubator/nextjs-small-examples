@@ -1,6 +1,7 @@
 'use client'
 
-import {getFormattedDate} from '@/common/utils/getFormattedDate';
+import {REQUEST_URL} from '@/shared/constants';
+import {getFormattedDate} from '@/shared/utils';
 import {useEffect, useState} from 'react'
 
 /**
@@ -11,7 +12,7 @@ export default function ClientSideRequest() {
 
   useEffect(() => {
     async function fetchPosts() {
-      const data = await fetch('https://timeapi.io/api/time/current/zone?timeZone=Europe/Minsk')
+      const data = await fetch(REQUEST_URL)
       const {dateTime} = await data.json()
       setDateTime(dateTime)
     }

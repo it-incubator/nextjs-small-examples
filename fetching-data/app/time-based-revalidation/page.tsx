@@ -1,4 +1,5 @@
-import {getFormattedDate} from '@/common/utils/getFormattedDate';
+import {REQUEST_URL} from '@/shared/constants';
+import {getFormattedDate} from '@/shared/utils';
 
 /**
  * Using default behavior with caching the response from fetch with time-based revalidation
@@ -13,7 +14,7 @@ import {getFormattedDate} from '@/common/utils/getFormattedDate';
 export const revalidate = 20
 
 export default async function TimeBasedRevalidation() {
-  const data = await fetch('https://timeapi.io/api/time/current/zone?timeZone=Europe/Minsk')
+  const data = await fetch(REQUEST_URL)
   const {dateTime} = await data.json()
 
   return getFormattedDate(dateTime)

@@ -1,10 +1,13 @@
-import {getFormattedDate} from '@/common/utils/getFormattedDate';
+import {REQUEST_URL} from '@/shared/constants';
+import {getFormattedDate} from '@/shared/utils';
 
 /**
- * Turning off default behavior with caching the response from fetch with { cache: 'no-store' }
+ * Turning off default behavior with caching the response from fetch with option { cache: 'no-store' } or export const dynamic = 'force-dynamic'
  */
+export const dynamic = 'force-dynamic'
+
 export default async function DynamicRequest() {
-  const data = await fetch('https://timeapi.io/api/time/current/zone?timeZone=Europe/Minsk', {cache: 'no-store'})
+  const data = await fetch(REQUEST_URL)
   const {dateTime} = await data.json()
 
   return getFormattedDate(dateTime)

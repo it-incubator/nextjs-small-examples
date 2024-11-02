@@ -1,5 +1,4 @@
-import {REQUEST_URL} from '@/shared/constants';
-import {PrettyDate} from "@/shared/utils/getFormattedDate";
+import {TimeDisplay} from '@/shared/components';
 
 /**
  * Using default behavior with caching the response from fetch
@@ -9,9 +8,5 @@ import {PrettyDate} from "@/shared/utils/getFormattedDate";
  * 3. try to update page multiple times: data will be the same every time.
  */
 export default async function StaticGeneration() {
-  /** now default option is { cache: 'force-cache' } */
-  const data = await fetch(REQUEST_URL)
-  const {dateTime} = await data.json()
-
-  return <PrettyDate date={dateTime} />
+  return <TimeDisplay />
 }

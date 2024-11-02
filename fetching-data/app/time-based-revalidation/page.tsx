@@ -1,5 +1,4 @@
-import {REQUEST_URL} from '@/shared/constants';
-import {PrettyDate} from "@/shared/utils/getFormattedDate";
+import {TimeDisplay} from '@/shared/components';
 
 /**
  * Using default behavior with caching the response from fetch with time-based revalidation
@@ -14,8 +13,5 @@ import {PrettyDate} from "@/shared/utils/getFormattedDate";
 export const revalidate = 20
 
 export default async function TimeBasedRevalidation() {
-  const data = await fetch(REQUEST_URL)
-  const {dateTime} = await data.json()
-
-  return <PrettyDate date={dateTime} />
+  return <TimeDisplay />
 }

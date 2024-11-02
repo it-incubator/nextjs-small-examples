@@ -30,8 +30,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # env files (can opt-in for commiting if needed)
-# exclude .env in gitignore for example with zone testing
-#.env*
+.env*
 
 # vercel
 .vercel

@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import styles from './page.module.css';
 import "./globals.css";
-import Link from 'next/link';
 import Image from 'next/image';
 
 const geistSans = localFont({
@@ -18,17 +17,20 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Rewrites as multi-zones",
+  title: "Multi-zones: micro-frontend",
   description: "Example with multi-zones using rewrites config",
 };
 
+/**
+ * Use 'a' tag instead of the <Link> component for navigating to host as it's another zone for this app.
+ * Prefetching any relative path in Next.js <Link> component will not work across zones.
+ */
 export default function RootLayout({children}: Readonly<{ children: ReactNode }>) {
   return (
       <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
       <div className={styles.page}>
         <header>
-          {/** Use 'a' tag instead of the <Link> component. Prefetching any relative path in Next.js <Link> component will not work across zones. */}
           <a href={process.env.HOST_DOMAIN || '/'}>
             <Image
                 className={styles.logo}

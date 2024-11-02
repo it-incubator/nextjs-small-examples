@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Example with multi-zones using rewrites config
+Example with multi-zones using rewrites config: micro-frontend app
 
 ## Getting Started
 

@@ -10,9 +10,10 @@ import {TimeDisplay} from '@/shared/components';
  * 5. make GET request on http://localhost:3000/api/revalidate;
  * 6. next page update will return new data.
  */
-let count = 0;
+let counter = 0;
 
 export default async function RevalidationOnDemand() {
-    console.log('RevalidationOnDemand rendering ' + count++)
+    console.log('RevalidationOnDemand rendering ' + counter++)
+
     return <TimeDisplay/>
 }

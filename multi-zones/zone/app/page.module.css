@@ -18,8 +18,7 @@
 }
 
 .main {
-  display: flex;
-  gap: 46px;
+  text-align: center;
   grid-row-start: 2;
   font-size: 30px;
 }
@@ -28,13 +27,25 @@
   color: var(--gray-alpha-300);
 }
 
+.heading {
+  font-size: 40px;
+  font-weight: 900;
+  margin-bottom: 50px;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+}
+
 @media (max-width: 1279px) {
   .page {
     padding: 32px;
     padding-bottom: 80px;
   }
 
-  .main {
+  .nav {
     flex-direction: column;
     align-items: center;
   }

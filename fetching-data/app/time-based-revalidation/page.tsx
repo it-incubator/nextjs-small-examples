@@ -11,8 +11,11 @@ import {TimeDisplay} from '@/shared/components';
  * 6. next update will return new data.
  */
 export const revalidate = 20
+
 let counter = 0
+
 export default async function TimeBasedRevalidation() {
     console.log("TimeBasedRevalidation rendering " + counter++)
+
     return <TimeDisplay />
 }

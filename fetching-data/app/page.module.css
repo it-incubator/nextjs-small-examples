@@ -31,11 +31,6 @@
   gap: 46px;
 }
 
-.link {
-  text-align: center;
-  margin-top: 80px;
-}
-
 @media (max-width: 1279px) {
   .page {
     padding: 32px;

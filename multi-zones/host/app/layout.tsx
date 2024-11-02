@@ -18,8 +18,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Fetching data example',
-  description: 'Example with different variants of fetching data. Includes static generation, dynamic request, revalidation on demand, time-based revalidation and client-side request',
+  title: "Multi-zones: host",
+  description: "Example with multi-zones using rewrites config",
 };
 
 export default function RootLayout({children}: Readonly<{ children: ReactNode }>) {

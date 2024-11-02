@@ -9,5 +9,6 @@ let counter = 0
 
 export default async function DynamicRequest() {
     console.log( 'DynamicRequest rendered: ' + counter++)
+
     return <TimeDisplay />
 }

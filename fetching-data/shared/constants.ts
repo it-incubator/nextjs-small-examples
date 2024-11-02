@@ -6,5 +6,4 @@ export const ROUTES = {
   TimeBasedRevalidation: '/time-based-revalidation',
   RevalidationOnDemand: '/revalidation-on-demand',
   ClientSideRequest: '/client-side-request',
-  Zone: '/zone',
 }

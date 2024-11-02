@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
       {
         source: '/zone/:path+',
         destination: `${process.env.ZONE_DOMAIN}/zone/:path+`,
+      },
+      {
+        source: '/it-incubator',
+        destination: `https://it-incubator.io`,
       }
     ];
   }

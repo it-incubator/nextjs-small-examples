@@ -7,9 +7,7 @@ import {TimeDisplay} from '@/shared/components';
  * 2. pnpm start;
  * 3. try to update page multiple times: data will be the same every time.
  */
-let count = 0;
-
 export default async function StaticGeneration() {
-    console.log('StaticGeneration rendered ' + count++)
+    console.log('StaticGeneration rendered')
     return <TimeDisplay />
 }

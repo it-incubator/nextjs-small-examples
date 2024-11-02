@@ -1,0 +1,1 @@
+export {fetchDate} from './fetchDate'

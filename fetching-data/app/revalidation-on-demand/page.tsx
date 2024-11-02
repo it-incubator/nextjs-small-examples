@@ -1,5 +1,4 @@
-import {REQUEST_URL} from '@/shared/constants';
-import {PrettyDate} from "@/shared/utils/getFormattedDate";
+import {TimeDisplay} from '@/shared/components';
 
 /**
  * Using default behavior with caching the response from fetch with revalidation on demand
@@ -12,10 +11,8 @@ import {PrettyDate} from "@/shared/utils/getFormattedDate";
  * 6. next page update will return new data.
  */
 let count = 0;
-export default async function RevalidationOnDemand() {
-  console.log('RevalidationOnDemand rendering ' + count++)
-  const data = await fetch(REQUEST_URL)
-  const {dateTime} = await data.json()
 
-  return <PrettyDate date={dateTime} />
+export default async function RevalidationOnDemand() {
+    console.log('RevalidationOnDemand rendering ' + count++)
+    return <TimeDisplay/>
 }

@@ -18,6 +18,8 @@
 }
 
 .main {
+  display: flex;
+  gap: 46px;
   grid-row-start: 2;
   font-size: 30px;
 }
@@ -26,23 +28,13 @@
   color: var(--gray-alpha-300);
 }
 
-.nav {
-  display: flex;
-  gap: 46px;
-}
-
-.link {
-  text-align: center;
-  margin-top: 80px;
-}
-
 @media (max-width: 1279px) {
   .page {
     padding: 32px;
     padding-bottom: 80px;
   }
 
-  .nav {
+  .main {
     flex-direction: column;
     align-items: center;
   }

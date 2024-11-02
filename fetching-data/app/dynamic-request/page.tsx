@@ -6,7 +6,10 @@ import {PrettyDate} from "@/shared/utils/getFormattedDate";
  */
 export const dynamic = 'force-dynamic'
 
+let counter = 0
+
 export default async function DynamicRequest() {
+  console.log( 'DynamicRequest rendered: ' + counter++)
   const data = await fetch(REQUEST_URL)
   const {dateTime} = await data.json()
 

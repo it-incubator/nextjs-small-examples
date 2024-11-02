@@ -10,8 +10,12 @@ import {PrettyDate} from "@/shared/utils/getFormattedDate";
  */
 export default async function StaticGeneration() {
   /** now default option is { cache: 'force-cache' } */
+  console.log('StaticGeneration rendered')
   const data = await fetch(REQUEST_URL)
   const {dateTime} = await data.json()
 
-  return <PrettyDate date={dateTime} />
+  return <div>
+    {([...new Array(1000)]).map((_, index) => <span>Large_static_page</span>) }
+    <PrettyDate date={dateTime} />
+  </div>
 }

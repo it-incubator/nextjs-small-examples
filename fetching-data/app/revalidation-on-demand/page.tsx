@@ -11,7 +11,9 @@ import {PrettyDate} from "@/shared/utils/getFormattedDate";
  * 5. make GET request on http://localhost:3000/api/revalidate;
  * 6. next page update will return new data.
  */
+let count = 0;
 export default async function RevalidationOnDemand() {
+  console.log('RevalidationOnDemand rendering ' + count++)
   const data = await fetch(REQUEST_URL)
   const {dateTime} = await data.json()
 

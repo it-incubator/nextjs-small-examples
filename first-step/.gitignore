@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules
+/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -14,7 +14,7 @@ node_modules
 /coverage
 
 # next.js
-.next
+/.next/
 /out/
 
 # production
@@ -29,9 +29,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# env files (can opt-in for commiting if needed)
-# exclude .env in gitignore for example with zone testing
-#.env*
+# env files (can opt-in for committing if needed)
+.env*
 
 # vercel
 .vercel
@@ -39,5 +38,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.idea

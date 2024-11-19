@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import {ReduxWrapper} from "@/store/ReduxWrapper";
 import Link from "next/link";
+import {Header} from "@/components/header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,26 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en">
     <body className={`${geistSans.variable} ${geistMono.variable}`}>
-    <header>HEADER
-
-      <ul>
-        <li>
-          <Link href={'/auth/login'}>LOGIN</Link>
-        </li>
-        <li>
-          <Link href={'/auth/registration'} prefetch={false}>Registration</Link>
-        </li>
-        <li>
-          <Link href={'/auth/registration/confirmation?code=123342342122131'} prefetch={false}>Confirmation</Link>
-        </li>
-        <li>
-          <Link href={'/pokemons'} prefetch={false}>pokemons</Link>
-        </li>
-      </ul>
-      <hr/>
-    </header>
     <ReduxWrapper>
-      {children}
+       <Header />
+
+          {children}
     </ReduxWrapper>
     <footer>
       <hr/>

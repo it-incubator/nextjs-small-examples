@@ -2,9 +2,11 @@
 import {useGetPokemonsQuery} from "@/features/pokemon/slice";
 import Link from "next/link";
 
-export const PokemonsList = () => {
+export const PokemonsList = ({skip}: any) => {
         // Using a query hook automatically fetches data and returns query values
-        const { data, error, isLoading } = useGetPokemonsQuery()
+        const { data, error, isLoading } = useGetPokemonsQuery(null, {
+            skip
+        })
         // Individual hooks are also accessible under the generated endpoints:
         // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
 
@@ -14,13 +16,14 @@ export const PokemonsList = () => {
                     <>Oh no, there was an error</>
                 ) : isLoading ? (
                     <>Loading...</>
-                ) : data ? data.results.map((pokemon: any) => {
-                            return <Link key={pokemon.name} href={'/pokemons/' + pokemon.name}>
+                ) : data ? <ul>{data.results.map((pokemon: any) => {
+                            return <li key={pokemon.name}><Link  href={'/pokemons/' + pokemon.name}>
                            {pokemon.name}
                             </Link>
+                            </li>
 
                         }
-                ) : null}
+                )} </ul> : null}
             </div>
         )
 }

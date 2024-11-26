@@ -7,6 +7,7 @@ import {authAPI, authReducer} from "@/features/auth/authSlice";
 
 
 export const initializeStore = () => {
+    console.log('STORE CREATED')
     const store = configureStore({
         reducer: {
             counter: counterReducer,

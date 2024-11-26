@@ -4,6 +4,7 @@ import {pokemonApi} from "@/features/pokemon/slice";
 
 
 export async function generateStaticParams() {
+    return;
     const response = await fetch('https://api.example.com/data');
 
     const serverData = await response.json();
@@ -26,8 +27,15 @@ export async function generateStaticParams() {
 
 
 export default async function PokemonsPage({params}: any) {
-const someValue = await params;
-    console.log(someValue)
+    //
+    // const store = initializeStore();
+    // console.log('generateStaticParams called')
+    //
+    // const promise = store.dispatch(
+    //     pokemonApi.util.updateQueryData('getPokemons', null, () => serverData)
+    // );
+    //
+
   return (
     <div>
         <h2>Public Pokemon list</h2>

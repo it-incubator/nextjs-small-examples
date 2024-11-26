@@ -5,9 +5,10 @@ import {initializeStore} from "@/store/store";
 
 type ReactChild = ReactElement | undefined | null | ReactNode;
 
-const store = initializeStore()
+
 
 export const ReduxWrapper  = ({children}: {children: ReactChild}) => {
+    const store = initializeStore()
     return <Provider store={store}>
         {children}
         </Provider>

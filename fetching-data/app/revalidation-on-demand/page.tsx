@@ -12,8 +12,11 @@ import {TimeDisplay} from '@/shared/components';
  */
 let counter = 0;
 
+// for user page with photo, потому что как бы пользователь разместив (или удалив) пост наверняка удивится, если зайдёт
+// на свою страницу, а там не будет нового поста, либо будет удалённый пост
+
 export default async function RevalidationOnDemand() {
-    console.log('RevalidationOnDemand rendering ' + counter++)
+    console.log('RevalidationOnDemand rendering ' + ++counter)
 
     return <TimeDisplay/>
 }

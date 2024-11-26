@@ -14,8 +14,10 @@ export const revalidate = 20
 
 let counter = 0
 
+// for main page, если медленно обновляется страница, редко и нет нужды гарантированно показать самый свежий контент
+
 export default async function TimeBasedRevalidation() {
-    console.log("TimeBasedRevalidation rendering " + counter++)
+    console.log("TimeBasedRevalidation rendering " + ++counter)
 
     return <TimeDisplay />
 }

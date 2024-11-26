@@ -7,8 +7,9 @@ export const dynamic = 'force-dynamic'
 
 let counter = 0
 
+// SSR, почему не юзаем для страницы пользователя?
 export default async function DynamicRequest() {
-    console.log( 'DynamicRequest rendered: ' + counter++)
+    console.log( 'DynamicRequest rendered: ' + ++counter)
 
     return <TimeDisplay />
 }

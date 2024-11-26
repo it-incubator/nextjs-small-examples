@@ -11,7 +11,7 @@ import {TimeDisplay} from '@/shared/components';
 let counter = 0;
 
 export default async function StaticGeneration() {
-    console.log('StaticGeneration rendered ' + counter++)
+    console.log('StaticGeneration rendered ' + ++counter)
 
     return <TimeDisplay />
 }

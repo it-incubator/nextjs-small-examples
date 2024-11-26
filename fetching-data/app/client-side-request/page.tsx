@@ -8,6 +8,7 @@ import {useEffect, useState} from 'react'
  * Fetching data on client-side as usual in SPA. You can replace local state with global one (RTK with RTK-query, for instance, or etc.)
  */
 export default function ClientSideRequest() {
+  const [message] = useState<string>('hello')
   const [dateTime, setDateTime] = useState<string | null>(null)
 
   useEffect(() => {
@@ -19,7 +20,9 @@ export default function ClientSideRequest() {
     void getTime()
   }, [])
 
-  if (!dateTime) return <Loader />
+  if (!dateTime) return <div>
+          Loader returned by Server {message} <Loader />
+  </div>
 
   return <PrettyDate date={dateTime} />
 }

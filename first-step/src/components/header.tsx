@@ -17,6 +17,9 @@ export const Header = () => {
                         <Link href={'/profile'}>profile</Link>
                     </li>
                     <li>
+                        <Link href={'/server-page'}>server page</Link>
+                    </li>
+                    <li>
                         <Link href={'/auth/registration'} prefetch={false}>Registration</Link>
                     </li>
                     <li>

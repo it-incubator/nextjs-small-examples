@@ -36,10 +36,14 @@ export default async function PokemonsPage({params}: any) {
     // );
     //
 
+    const pokemonsResponse = await fetch('https://pokeapi.co/api/v2/pokemon')
+    const pokemons = await pokemonsResponse.json();
+
+
   return (
     <div>
         <h2>Public Pokemon list</h2>
-      <PokemonsList skip={true}/>
+      <PokemonsList pokemons={pokemons}/>
     </div>
   );
 }

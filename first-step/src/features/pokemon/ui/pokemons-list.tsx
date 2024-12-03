@@ -1,12 +1,30 @@
 'use client'
-import {useGetPokemonsQuery} from "@/features/pokemon/slice";
+import {pokemonApi, useGetPokemonsQuery} from "@/features/pokemon/slice";
 import Link from "next/link";
+import {useAppStore} from "@/store/store";
+import {useRef} from "react";
 
-export const PokemonsList = ({skip}: any) => {
+export const PokemonsList = ({pokemons}: any) => {
+
+    const store = useAppStore()
+    const initialized = useRef(!pokemons)
+
+    console.log('pokemons: ', pokemons)
+    console.log('initialized: ', initialized)
+
+    if (!initialized.current) {
+        store.dispatch(
+            pokemonApi.util.upsertQueryData('getPokemons', null, pokemons)
+        );
+        initialized.current = true;
+    }
+
         // Using a query hook automatically fetches data and returns query values
         const { data, error, isLoading } = useGetPokemonsQuery(null, {
-            skip
+            //skip: !!pokemons
         })
+
+    console.log("data: ", data)
         // Individual hooks are also accessible under the generated endpoints:
         // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
 

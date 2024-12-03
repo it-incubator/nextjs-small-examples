@@ -23,7 +23,7 @@ export default function PokemonsPage() {
   return (
     <div>
         <h2>Pokemon list</h2>
-      <PokemonsList skip={false} />
+      <PokemonsList />
     </div>
   );
 }

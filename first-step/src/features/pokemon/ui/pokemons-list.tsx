@@ -1,18 +1,27 @@
 'use client'
 import {pokemonApi, useGetPokemonsQuery} from "@/features/pokemon/slice";
 import Link from "next/link";
-import {useAppStore} from "@/store/store";
+import {useAppSelector, useAppStore} from "@/store/store";
 import {useRef, useState} from "react";
+import {useSelector} from "react-redux";
 
 export const PokemonsList = ({pokemons}: any) => {
     const store = useAppStore()
-    const [offset, setOffset] = useState(0)
 
+    const { data: dataFromCache, originalArgs } = useAppSelector((state) =>
+        pokemonApi.endpoints.getPokemons.select()(state)
+    )
+
+    const [offset, setOffset] = useState(originalArgs || 0)
+    console.log('offset!!',offset)
     function next() {
         setOffset(prev => prev + 10)
     }
 
-    const needInitPokemonsInStore = useRef(!!pokemons)
+    console.log('dataFromCache', dataFromCache)
+    console.log('originalArgs', originalArgs)
+
+    const needInitPokemonsInStore = useRef(!!pokemons && !dataFromCache)
 
     console.log('pokemons: ', pokemons)
     console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)

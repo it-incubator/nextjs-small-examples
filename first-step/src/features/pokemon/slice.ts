@@ -1,6 +1,5 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-// import type { Pokemon } from './types'
 
 // Define a service using a base URL and expected endpoints
 export const pokemonApi = createApi({
@@ -10,8 +9,24 @@ export const pokemonApi = createApi({
         getPokemonByName: builder.query<any, string>({
             query: (name) => `pokemon/${name}`,
         }),
-        getPokemons: builder.query<any[], null>({
-            query: () => `pokemon`,
+        getPokemons: builder.query<any[], number>({
+            query: (offset) => `pokemon?limit=${10}&offset=${offset}`,
+            // Only have one cache entry because the arg always maps to one string
+            serializeQueryArgs: ({endpointName}) => {
+                return endpointName
+            },
+            transformResponse: (response: any, meta, arg) => {
+                    console.log('transformResponse: ', response.results)
+                    return response.results
+            },
+            // Always merge incoming data to the cache entry
+            merge: (currentCache, newItems) => {
+                currentCache.push(...newItems)
+            },
+            // Refetch when the page arg changes
+            forceRefetch({ currentArg, previousArg }) {
+                return currentArg !== previousArg
+            },
         }),
     }),
 })

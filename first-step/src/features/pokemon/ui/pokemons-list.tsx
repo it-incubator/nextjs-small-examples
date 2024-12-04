@@ -21,20 +21,16 @@ export const PokemonsList = ({pokemons}: any) => {
     console.log('dataFromCache', dataFromCache)
     console.log('originalArgs', originalArgs)
 
-    const needInitPokemonsInStore = useRef(!!pokemons && !dataFromCache)
+    const needInitPokemonsInStore = !!pokemons && !dataFromCache
 
     console.log('pokemons: ', pokemons)
     console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)
 
-    console.log(needInitPokemonsInStore.current)
-
-    if (needInitPokemonsInStore.current) {
+    if (needInitPokemonsInStore) {
         store.dispatch(
             pokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
         );
         console.log('pokemons upserted to store')
-        needInitPokemonsInStore.current = false;
-        console.log(needInitPokemonsInStore.current)
     }
 
         // Using a query hook automatically fetches data and returns query values

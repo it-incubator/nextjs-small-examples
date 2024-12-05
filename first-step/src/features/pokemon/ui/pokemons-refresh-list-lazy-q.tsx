@@ -2,32 +2,28 @@
 import Link from "next/link";
 import {useAppSelector, useAppStore} from "@/store/store";
 import {useEffect, useRef, useState} from "react";
-import {freshPokemonApi, useGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
+import {freshPokemonApi, useGetPokemonsQuery, useLazyGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
 import {pokemonApi} from "@/features/pokemon/slice";
 
-export const PokemonsFreshList = ({pokemons}: any) => {
-    console.log("PokemonList rendering...")
+export const PokemonsFreshListLazy = ({pokemons}: any) => {
+    console.log("PokemonList rendering...!!!")
     console.log(new Date().toISOString())
     const store = useAppStore()
 
-    const { data: dataFromCache } = useAppSelector((state) =>
-        freshPokemonApi.endpoints.getPokemons.select()(state)
-    )
-    console.log('dataFromCache', dataFromCache)
-
-    const [offset, setOffset] = useState(0)
+    const initialOffset = 0
+    const [offset, setOffset] = useState(initialOffset)
     console.log('offset!!',offset)
     function next() {
         setOffset(prev => prev + 10)
     }
 
-
-    const needInitPokemonsInStore = !!pokemons && !dataFromCache;
+    const needInitPokemonsInStore = useRef(!!pokemons)
 
     console.log('pokemons: ', pokemons)
     console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)
 
-    if (needInitPokemonsInStore) {
+    if (needInitPokemonsInStore.current) {
+        needInitPokemonsInStore.current = false
         store.dispatch(
             freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
         );
@@ -35,9 +31,15 @@ export const PokemonsFreshList = ({pokemons}: any) => {
     }
 
     // Using a query hook automatically fetches data and returns query values
-    const result = useGetPokemonsQuery(offset)
+    const result = useLazyGetPokemonsQuery()
     console.log('result',result)
-    const {data, error, isLoading} = result
+    const [trigger, { data, isLoading, error }] = result
+
+    useEffect(() => {
+        if(offset !== initialOffset) {
+            trigger(offset)
+        }
+    }, [offset]);
 
     useEffect(() => {
         return () => {

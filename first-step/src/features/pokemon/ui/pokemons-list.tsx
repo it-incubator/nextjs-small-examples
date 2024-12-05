@@ -2,8 +2,7 @@
 import {pokemonApi, useGetPokemonsQuery} from "@/features/pokemon/slice";
 import Link from "next/link";
 import {useAppSelector, useAppStore} from "@/store/store";
-import {useRef, useState} from "react";
-import {useSelector} from "react-redux";
+import {useState} from "react";
 
 export const PokemonsList = ({pokemons}: any) => {
     console.log("PokemonList rendering...")

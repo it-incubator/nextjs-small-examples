@@ -34,6 +34,9 @@ export const Header = () => {
                     <li>
                         <Link href={'/public-pokemons'} prefetch={false}>public pokemons</Link>
                     </li>
+                    <li>
+                        <Link href={'/public-fresh-pokemons'} prefetch={false}>public fresh pokemons</Link>
+                    </li>
                     <div>
                         {data && 'user authorized: ' + data.userId}
                     </div>

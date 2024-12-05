@@ -1,4 +1,4 @@
-import {PokemonsList} from "@/features/pokemon/ui/pokemons-list";
+import {PokemonsFreshList} from "@/features/pokemon/ui/pokemons-refresh-list";
 
 
 export default async function PokemonsPage({params}: any) {
@@ -10,7 +10,7 @@ export default async function PokemonsPage({params}: any) {
   return (
     <div>
         <h2>Public Pokemon list</h2>
-      <PokemonsList pokemons={pokemons.results}/>
+      <PokemonsFreshList pokemons={pokemons.results}/>
     </div>
   );
 }

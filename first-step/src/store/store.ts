@@ -3,6 +3,7 @@ import {counterReducer} from "@/features/counter/counterSlice";
 import {pokemonApi} from "@/features/pokemon/slice";
 import {authAPI, authReducer} from "@/features/auth/authSlice";
 import {TypedUseSelectorHook, useDispatch, useSelector, useStore} from "react-redux";
+import {freshPokemonApi} from "@/features/pokemon/fresh-slice";
 
 
 
@@ -14,10 +15,11 @@ export const initializeStore = () => {
             counter: counterReducer,
             auth: authReducer,
             [pokemonApi.reducerPath]: pokemonApi.reducer,
+            [freshPokemonApi.reducerPath]: freshPokemonApi.reducer,
             [authAPI.reducerPath]: authAPI.reducer,
         },
         middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(pokemonApi.middleware, authAPI.middleware),
+            getDefaultMiddleware().concat(pokemonApi.middleware, freshPokemonApi.middleware, authAPI.middleware),
 
     })
     return store;

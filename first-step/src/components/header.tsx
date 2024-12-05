@@ -7,10 +7,6 @@ export const Header = () => {
         // Using a query hook automatically fetches data and returns query values
         const { data, error, isLoading } = useGetMeQuery()
 
-        console.log("data: ", data)
-        console.log("error: ", error)
-        console.log("isLoading: ", isLoading)
-
         return (
             <header>HEADER
 
@@ -36,6 +32,9 @@ export const Header = () => {
                     </li>
                     <li>
                         <Link href={'/public-fresh-pokemons'} prefetch={false}>public fresh pokemons</Link>
+                    </li>
+                    <li>
+                        <Link href={'/public-fresh-pokemons-lazy-hook'} prefetch={false}>public fresh pokemons lazy hook</Link>
                     </li>
                     <div>
                         {data && 'user authorized: ' + data.userId}

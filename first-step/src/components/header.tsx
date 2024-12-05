@@ -3,8 +3,13 @@ import {useGetMeQuery} from "@/features/auth/authSlice";
 import Link from "next/link";
 
 export const Header = () => {
+    console.log("Header rendering")
         // Using a query hook automatically fetches data and returns query values
         const { data, error, isLoading } = useGetMeQuery()
+
+        console.log("data: ", data)
+        console.log("error: ", error)
+        console.log("isLoading: ", isLoading)
 
         return (
             <header>HEADER

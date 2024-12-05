@@ -5,6 +5,7 @@ import {useAppStore} from "@/store/store";
 import {useRef, useState} from "react";
 
 export const PokemonsList = ({pokemons}: any) => {
+    console.log("PokemonList rendering...")
     const store = useAppStore()
     const [offset, setOffset] = useState(0)
 

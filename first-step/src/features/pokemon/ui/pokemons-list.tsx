@@ -1,31 +1,36 @@
 'use client'
 import {pokemonApi, useGetPokemonsQuery} from "@/features/pokemon/slice";
 import Link from "next/link";
-import {useAppStore} from "@/store/store";
+import {useAppSelector, useAppStore} from "@/store/store";
 import {useRef, useState} from "react";
+import {useSelector} from "react-redux";
 
 export const PokemonsList = ({pokemons}: any) => {
     const store = useAppStore()
-    const [offset, setOffset] = useState(0)
 
+    const { data: dataFromCache, originalArgs } = useAppSelector((state) =>
+        pokemonApi.endpoints.getPokemons.select()(state)
+    )
+
+    const [offset, setOffset] = useState(originalArgs || 0)
+    console.log('offset!!',offset)
     function next() {
         setOffset(prev => prev + 10)
     }
 
-    const needInitPokemonsInStore = useRef(!!pokemons)
+    console.log('dataFromCache', dataFromCache)
+    console.log('originalArgs', originalArgs)
+
+    const needInitPokemonsInStore = !!pokemons && !dataFromCache
 
     console.log('pokemons: ', pokemons)
     console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)
 
-    console.log(needInitPokemonsInStore.current)
-
-    if (needInitPokemonsInStore.current) {
+    if (needInitPokemonsInStore) {
         store.dispatch(
             pokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
         );
         console.log('pokemons upserted to store')
-        needInitPokemonsInStore.current = false;
-        console.log(needInitPokemonsInStore.current)
     }
 
         // Using a query hook automatically fetches data and returns query values

@@ -7,7 +7,7 @@ export const Header = () => {
   const {data, error, isLoading} = useGetMeQuery()
 
   return (
-      <header>HEADER
+      <header>
         <ul>
           <li>
             <Link href={'/auth/login'}>LOGIN</Link>

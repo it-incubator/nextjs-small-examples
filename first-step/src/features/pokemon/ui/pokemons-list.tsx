@@ -14,13 +14,11 @@ export const PokemonsList = () => {
             <>Oh no, there was an error</>
         ) : isLoading ? (
             <>Loading...</>
-        ) : data ? data.results.map((pokemon: any) => {
-              return <Link key={pokemon.name} href={'/pokemons/' + pokemon.name}>
-                {pokemon.name}
-              </Link>
-
-            }
-        ) : null}
+        ) : data ? data.results.map((pokemon: any) => (
+            <Link key={pokemon.name} href={'/pokemons/' + pokemon.name}>
+              {pokemon.name}
+            </Link>
+        )) : null}
       </div>
   )
 }

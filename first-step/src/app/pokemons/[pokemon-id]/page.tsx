@@ -22,7 +22,7 @@ export default function PokemonsPage() {
               <Link href={'/pokemons/' + data.species.name}>
                 <h3>{data.species.name}</h3>
               </Link>
-              <img src={data.sprites.front_shiny} alt={data.species.name}/>
+              <img src={data.sprites.front_shiny} alt={data.species.name} width={'200px'}/>
             </>
         ) : null}
       </div>

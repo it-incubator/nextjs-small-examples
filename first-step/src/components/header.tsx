@@ -31,10 +31,10 @@ export const Header = () => {
                         <Link href={'/pokemons'} prefetch={false}>pokemons</Link>
                     </li>
                     <li>
-                        <Link href={'/public-pokemons'} prefetch={false}>public pokemons</Link>
+                        <Link href={'/public-pokemons'} prefetch={false}>public pokemons with RTK cache</Link>
                     </li>
                     <li>
-                        <Link href={'/public-pokemons/without-server-preloading'} prefetch={false}>public pokemons
+                        <Link href={'/public-pokemons/without-server-preloading'} prefetch={false}>public pokemons with RTK cache
                             without-server-preloading</Link>
                     </li>
                     <li>

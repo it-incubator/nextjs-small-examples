@@ -1,9 +1,8 @@
 'use client'
 import Link from "next/link";
-import {useAppSelector, useAppStore} from "@/store/store";
+import {useAppStore} from "@/store/store";
 import {useEffect, useRef, useState} from "react";
 import {freshPokemonApi, useGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
-import {pokemonApi} from "@/features/pokemon/slice";
 
 export const PokemonsFreshList = ({pokemons}: any) => {
     console.log("PokemonList rendering...")
@@ -11,28 +10,34 @@ export const PokemonsFreshList = ({pokemons}: any) => {
     const store = useAppStore()
     const [offset, setOffset] = useState(0)
     // Using a query hook automatically fetches data and returns query values
-    const {data, error, isLoading} = useGetPokemonsQuery(offset)
+
+    const needInitPokemonsInStore = useRef(!!pokemons)
+    // or get data with selector like in other example
+
+    const {data, error, isLoading} = useGetPokemonsQuery(offset, {
+        skip: needInitPokemonsInStore.current
+    })
+
+    useEffect(() => {
+       // const needInitPokemonsInStore = !!pokemons && !data;
+        if (needInitPokemonsInStore.current) {
+            store.dispatch(
+                freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
+            );
+            console.log('pokemons upserted to store')
+            needInitPokemonsInStore.current = false;
+        }
+    }, [pokemons])
 
     console.log('data', data)
-
 
     console.log('offset!!',offset)
     function next() {
         setOffset(prev => prev + 10)
     }
 
-
-    const needInitPokemonsInStore = !!pokemons && !data;
-
     console.log('pokemons: ', pokemons)
-    console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)
 
-    if (needInitPokemonsInStore) {
-        store.dispatch(
-            freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
-        );
-        console.log('pokemons upserted to store')
-    }
 
     useEffect(() => {
         return () => {

@@ -34,10 +34,24 @@ export const Header = () => {
                         <Link href={'/public-pokemons'} prefetch={false}>public pokemons</Link>
                     </li>
                     <li>
+                        <Link href={'/public-pokemons/without-server-preloading'} prefetch={false}>public pokemons
+                            without-server-preloading</Link>
+                    </li>
+                    <li>
                         <Link href={'/public-fresh-pokemons'} prefetch={false}>public fresh pokemons</Link>
                     </li>
                     <li>
-                        <Link href={'/public-fresh-pokemons-lazy-hook'} prefetch={false}>public fresh pokemons lazy hook</Link>
+                        <Link href={'/public-fresh-pokemons/without-server-preloading'} prefetch={false}>public fresh
+                            pokemons
+                            without-server-preloading</Link>
+                    </li>
+                    <li>
+                        <Link href={'/public-fresh-pokemons-lazy-hook'} prefetch={false}>public fresh pokemons lazy
+                            hook</Link>
+                    </li>
+                    <li>
+                        <Link href={'/public-fresh-pokemons-lazy-hook/without-server-preloading'} prefetch={false}>public fresh pokemons lazy
+                            hook without-server-preloading</Link>
                     </li>
                     <div>
                         {data && 'user authorized: ' + data.userId}

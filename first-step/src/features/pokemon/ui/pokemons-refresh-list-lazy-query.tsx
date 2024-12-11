@@ -9,45 +9,39 @@ export const PokemonsFreshListLazy = ({pokemons}: any) => {
     console.log(new Date().toISOString())
     const store = useAppStore()
 
-    const initialOffset = 0
-    const [offset, setOffset] = useState(initialOffset)
-    console.log('offset!!',offset)
+    const ZERO_OFFSET = 0
+   // const [offset, setOffset] = useState(ZERO_OFFSET)
     function next() {
-        setOffset(prev => prev + 10)
+        const offset = originalArgs ??  ZERO_OFFSET
+        trigger(offset + 10)
     }
-
-    const needInitPokemonsInStore = useRef(!!pokemons)
 
     console.log('pokemons: ', pokemons)
-    console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)
 
-    if (needInitPokemonsInStore.current) {
-        needInitPokemonsInStore.current = false
-        store.dispatch(
-            freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
-        );
-        console.log('pokemons upserted to store')
-    }
+    useEffect(() => {
+        if (!!pokemons) {
+            store.dispatch(
+                freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
+            );
+            console.log('pokemons upserted to store')
+        } else {
+            trigger(ZERO_OFFSET)
+        }
+
+        return () => {
+            console.log('unmount')
+            store.dispatch(
+                freshPokemonApi.util.resetApiState()
+            )
+        }
+    }, [])
+
 
     // Using a query hook automatically fetches data and returns query values
     const result = useLazyGetPokemonsQuery()
     console.log('result',result)
-    const [trigger, { data, isLoading, error }] = result
+    const [trigger, { data, isLoading, error, originalArgs }] = result
 
-    useEffect(() => {
-        if(offset !== initialOffset) {
-            trigger(offset)
-        }
-    }, [offset]);
-
-    useEffect(() => {
-        return () => {
-            console.log('unmount')
-            store.dispatch(
-             freshPokemonApi.util.resetApiState()
-            )
-        }
-    }, [])
 
     console.log("data: ", data)
     console.log("isLoading: ", isLoading)

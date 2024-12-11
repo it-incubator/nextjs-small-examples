@@ -11,9 +11,6 @@ export default function LoginPage() {
     <div>
         <h2>Profile</h2>
         {!!data && <span>{data.profile}, {data.address}</span> }
-
-
-
     </div>
   )
 }

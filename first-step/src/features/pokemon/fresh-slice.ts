@@ -2,8 +2,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 // Define a service using a base URL and expected endpoints
-export const pokemonApi = createApi({
-    reducerPath: 'pokemonApi',
+export const freshPokemonApi = createApi({
+    reducerPath: 'freshPokemonApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
     endpoints: (builder) => ({
         getPokemonByName: builder.query<any, string>({
@@ -16,7 +16,6 @@ export const pokemonApi = createApi({
                 return endpointName
             },
             transformResponse: (response: any, meta, arg) => {
-                    console.log('transformResponse: ', response.results)
                     return response.results
             },
             // Always merge incoming data to the cache entry
@@ -33,4 +32,4 @@ export const pokemonApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetPokemonByNameQuery, useGetPokemonsQuery } = pokemonApi
+export const { useGetPokemonByNameQuery, useGetPokemonsQuery,useLazyGetPokemonsQuery } = freshPokemonApi

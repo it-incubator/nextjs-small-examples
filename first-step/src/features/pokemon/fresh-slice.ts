@@ -16,7 +16,6 @@ export const freshPokemonApi = createApi({
                 return endpointName
             },
             transformResponse: (response: any, meta, arg) => {
-                    console.log('transformResponse: ', response.results)
                     return response.results
             },
             // Always merge incoming data to the cache entry

@@ -10,19 +10,20 @@ export const PokemonsFreshList = ({pokemons}: any) => {
     console.log(new Date().toISOString())
     const store = useAppStore()
 
-    const { data: dataFromCache } = useAppSelector((state) =>
-        freshPokemonApi.endpoints.getPokemons.select()(state)
-    )
-    console.log('dataFromCache', dataFromCache)
-
     const [offset, setOffset] = useState(0)
+    // Using a query hook automatically fetches data and returns query values
+    const {data, error, isLoading} = useGetPokemonsQuery(offset)
+
+    console.log('data', data)
+
+
     console.log('offset!!',offset)
     function next() {
         setOffset(prev => prev + 10)
     }
 
 
-    const needInitPokemonsInStore = !!pokemons && !dataFromCache;
+    const needInitPokemonsInStore = !!pokemons && !data;
 
     console.log('pokemons: ', pokemons)
     console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)
@@ -34,11 +35,6 @@ export const PokemonsFreshList = ({pokemons}: any) => {
         console.log('pokemons upserted to store')
     }
 
-    // Using a query hook automatically fetches data and returns query values
-    const result = useGetPokemonsQuery(offset)
-    console.log('result',result)
-    const {data, error, isLoading} = result
-
     useEffect(() => {
         return () => {
             console.log('unmount')
@@ -48,7 +44,6 @@ export const PokemonsFreshList = ({pokemons}: any) => {
         }
     }, [])
 
-    console.log("data: ", data)
     console.log("isLoading: ", isLoading)
     // Individual hooks are also accessible under the generated endpoints:
     // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')

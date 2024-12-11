@@ -1,4 +1,4 @@
-import {PokemonsFreshListLazy} from "@/features/pokemon/ui/pokemons-refresh-list-lazy-q";
+import {PokemonsFreshListLazy} from "@/features/pokemon/ui/pokemons-refresh-list-lazy-query";
 
 
 export default async function PokemonsPage({params}: any) {

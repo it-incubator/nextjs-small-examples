@@ -1,9 +1,8 @@
 'use client'
 import Link from "next/link";
-import {useAppSelector, useAppStore} from "@/store/store";
+import {useAppStore} from "@/store/store";
 import {useEffect, useRef, useState} from "react";
-import {freshPokemonApi, useGetPokemonsQuery, useLazyGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
-import {pokemonApi} from "@/features/pokemon/slice";
+import {freshPokemonApi, useLazyGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
 
 export const PokemonsFreshListLazy = ({pokemons}: any) => {
     console.log("PokemonList rendering...!!!")

@@ -5,16 +5,13 @@ import {useEffect, useRef, useState} from "react";
 import {freshPokemonApi, useGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
 
 export const PokemonsFreshList = ({pokemons}: any) => {
-    debugger;
     console.log("PokemonList rendering...")
     const store = useAppStore()
-
     const [offset, setOffset] = useState(0)
     console.log('offset!!',offset)
     function next() {
         setOffset(prev => prev + 10)
     }
-
 
     const needInitPokemonsInStore = useRef(!!pokemons)
 
@@ -34,7 +31,6 @@ export const PokemonsFreshList = ({pokemons}: any) => {
 
     useEffect(() => {
         return () => {
-            debugger;
             store.dispatch(
              freshPokemonApi.util.resetApiState()
             )

@@ -4,7 +4,10 @@ import Link from "next/link";
 import {useAppSelector, useAppStore} from "@/store/store";
 import {useState} from "react";
 
-export const PokemonsList = ({pokemons}: any) => {
+// задача, чтобы сервер вернул нам уже отрендеренный список, чтобы клиент не делал повторный запрос, но чтобы в редаксе был данный стейт,
+// чтобы можно было делать инфинити скроллинг и подгружать следюущие страницы уже через клиент
+
+export const PokemonsList = (props: any) => {
     console.log("PokemonList rendering...")
     const store = useAppStore()
 
@@ -13,7 +16,9 @@ export const PokemonsList = ({pokemons}: any) => {
     )
 
     const [offset, setOffset] = useState(originalArgs || 0)
+
     console.log('offset!!',offset)
+
     function next() {
         setOffset(prev => prev + 10)
     }
@@ -21,14 +26,18 @@ export const PokemonsList = ({pokemons}: any) => {
     console.log('dataFromCache', dataFromCache)
     console.log('originalArgs', originalArgs)
 
-    const needInitPokemonsInStore = !!pokemons && !dataFromCache
+    const needInitPokemonsInStore = !!props.pokemons && !dataFromCache
 
-    console.log('pokemons: ', pokemons)
+    console.log('pokemons: ', props.pokemons)
     console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)
 
     if (needInitPokemonsInStore) {
+        // мы диспатчим не экшен, а санку, поэтому измнения синзронно сразу не  попадут в редьюсеры,
+        // поэтому после этого кода сразу ниже
+        // const { data, error, isLoading } = useGetPokemonsQuery(offset)
+        // у нас ещё не будет данных
         store.dispatch(
-            pokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
+            pokemonApi.util.upsertQueryData('getPokemons', 0, props.pokemons)
         );
         console.log('pokemons upserted to store')
     }
@@ -36,12 +45,11 @@ export const PokemonsList = ({pokemons}: any) => {
         // Using a query hook automatically fetches data and returns query values
         const { data, error, isLoading } = useGetPokemonsQuery(offset)
 
-    console.log("data: ", data)
-    console.log("isLoading: ", isLoading)
+        console.log("data: ", data)
         // Individual hooks are also accessible under the generated endpoints:
         // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
 
-        const dataForRender = data || pokemons;
+        const dataForRender = data || props.pokemons;
 
         return (
             <div className="App">

@@ -1,4 +1,4 @@
-import {PokemonsFreshList} from "@/features/pokemon/ui/pokemons-refresh-list";
+import {PokemonsFreshList} from "@/features/pokemon/ui/pokemons-fresh-list";
 
 
 export default async function PokemonsPage({params}: any) {

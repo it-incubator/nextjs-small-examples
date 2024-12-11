@@ -11,7 +11,10 @@ export const PokemonsList = (props: any) => {
     console.log("PokemonList rendering...")
     const store = useAppStore()
 
-    const { data: dataFromCache, originalArgs } = useAppSelector((state) =>
+    // нам это нужно, чтобы при возврате на страницу (а страница ведь размонтировалось и локальный стейт исчез)
+    // вернуть состояние offset для локальноо стейта, благодаря тому, что rtk query хранит аргументы, с которыми
+    //  был вызван квериХук
+    const { originalArgs } = useAppSelector((state) =>
         pokemonApi.endpoints.getPokemons.select()(state)
     )
 
@@ -22,6 +25,10 @@ export const PokemonsList = (props: any) => {
     function next() {
         setOffset(prev => prev + 10)
     }
+
+    // Using a query hook automatically fetches data and returns query values
+    const { data, error, isLoading } = useGetPokemonsQuery(offset)
+    const dataFromCache = data
 
     console.log('dataFromCache', dataFromCache)
     console.log('originalArgs', originalArgs)
@@ -42,8 +49,7 @@ export const PokemonsList = (props: any) => {
         console.log('pokemons upserted to store')
     }
 
-        // Using a query hook automatically fetches data and returns query values
-        const { data, error, isLoading } = useGetPokemonsQuery(offset)
+
 
         console.log("data: ", data)
         // Individual hooks are also accessible under the generated endpoints:

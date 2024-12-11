@@ -1,38 +1,44 @@
 'use client'
 import Link from "next/link";
-import {useAppSelector, useAppStore} from "@/store/store";
+import {useAppStore} from "@/store/store";
 import {useEffect, useRef, useState} from "react";
-import {freshPokemonApi, useGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
-import {pokemonApi} from "@/features/pokemon/slice";
+import {freshPokemonApi, useLazyGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
 
-export const PokemonsFreshList = ({pokemons}: any) => {
-    console.log("PokemonList rendering...")
+export const PokemonsFreshListLazy = ({pokemons}: any) => {
+    console.log("PokemonList rendering...!!!")
     console.log(new Date().toISOString())
     const store = useAppStore()
-    const [offset, setOffset] = useState(0)
-    // Using a query hook automatically fetches data and returns query values
-    const {data, error, isLoading} = useGetPokemonsQuery(offset)
 
-    console.log('data', data)
-
-
+    const initialOffset = 0
+    const [offset, setOffset] = useState(initialOffset)
     console.log('offset!!',offset)
     function next() {
         setOffset(prev => prev + 10)
     }
 
-
-    const needInitPokemonsInStore = !!pokemons && !data;
+    const needInitPokemonsInStore = useRef(!!pokemons)
 
     console.log('pokemons: ', pokemons)
     console.log('needInitPokemonsInStore: ', needInitPokemonsInStore)
 
-    if (needInitPokemonsInStore) {
+    if (needInitPokemonsInStore.current) {
+        needInitPokemonsInStore.current = false
         store.dispatch(
             freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
         );
         console.log('pokemons upserted to store')
     }
+
+    // Using a query hook automatically fetches data and returns query values
+    const result = useLazyGetPokemonsQuery()
+    console.log('result',result)
+    const [trigger, { data, isLoading, error }] = result
+
+    useEffect(() => {
+        if(offset !== initialOffset) {
+            trigger(offset)
+        }
+    }, [offset]);
 
     useEffect(() => {
         return () => {
@@ -43,6 +49,7 @@ export const PokemonsFreshList = ({pokemons}: any) => {
         }
     }, [])
 
+    console.log("data: ", data)
     console.log("isLoading: ", isLoading)
     // Individual hooks are also accessible under the generated endpoints:
     // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')

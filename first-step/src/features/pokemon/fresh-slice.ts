@@ -16,7 +16,6 @@ export const freshPokemonApi = createApi({
                 return endpointName
             },
             transformResponse: (response: any, meta, arg) => {
-                    console.log('transformResponse: ', response.results)
                     return response.results
             },
             // Always merge incoming data to the cache entry
@@ -33,4 +32,4 @@ export const freshPokemonApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetPokemonByNameQuery, useGetPokemonsQuery } = freshPokemonApi
+export const { useGetPokemonByNameQuery, useGetPokemonsQuery,useLazyGetPokemonsQuery } = freshPokemonApi

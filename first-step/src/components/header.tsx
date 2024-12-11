@@ -1,6 +1,6 @@
 'use client'
-import {useGetMeQuery} from "@/features/auth/authSlice";
-import Link from "next/link";
+import {useGetMeQuery} from '@/features/auth/authSlice';
+import Link from 'next/link';
 
 export const Header = () => {
     console.log("Header rendering")

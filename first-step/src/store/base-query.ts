@@ -12,6 +12,7 @@ import {setToken} from '@/features/auth/authSlice';
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8888/api/',
   prepareHeaders: (headers, {getState}) => {
+    // you can take accessToken from localStorage/sessionStorage
     const token = (getState() as RootState).auth.accessToken
 
     // If we have a token set in state, let's assume that we should be passing it.
@@ -34,8 +35,10 @@ export const baseQueryWithReauth: BaseQueryFn<
   // wait until the mutex is available without locking it
   await mutex.waitForUnlock()
   let result = await baseQuery(args, api, extraOptions)
-  if (result.error && result.error.status === 401) {
-    console.log('baseQueryWithReauth: NEED REAUTH')
+  if (result.error?.status === 401 ||
+      (result.error?.status === 'PARSING_ERROR' && result.error?.originalStatus === 401)
+  ) {
+    console.log('baseQueryWithReauth: NEED REAUTH: ' + args)
     // checking whether the mutex is locked
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
@@ -47,20 +50,26 @@ export const baseQueryWithReauth: BaseQueryFn<
               body: {}, // Include the body if needed, e.g., { refreshToken: '...' }
             },
             api,
-            extraOptions
+            //extraOptions
         )
         if (refreshResult.data) {
 
           // @ts-ignore
           api.dispatch(setToken({accessToken: refreshResult.data.accessToken}))
+          // other option to save token to localStorage
           // retry the initial query
           result = await baseQuery(args, api, extraOptions)
         } else {
           // api.dispatch(loggedOut())
+          // posiible scenario if refresh токен тоже короткоживущий и вкладка долго открыта, то пользователь нажмёт
+          // кнопку, а у него протух и аккссее и рефреш, то в этом случае нужно явно его вылогинить (зачистить auth информацию в стейте)
         }
-      } finally {
+      } catch (error) {
+        console.error(error)
+      }
+      finally {
         // release must be called once the mutex should be released again.
-        release()
+          release()
       }
     } else {
       // wait until the mutex is available without locking it

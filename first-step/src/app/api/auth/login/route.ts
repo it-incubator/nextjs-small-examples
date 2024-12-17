@@ -12,6 +12,6 @@ export async function POST(req: Request) {
 
   const pseudoToken = {expirationDate: expirationDate, userId: 1};
   return Response.json({accessToken: JSON.stringify(pseudoToken)}, {
-    headers: {'Set-Cookie': `refreshToken=refreshToken1`},
+    headers: {'Set-Cookie': `refreshToken=refreshToken1;HttpOnly`},
   })
 }

@@ -54,7 +54,7 @@ export const Header = () => {
                             hook without-server-preloading</Link>
                     </li>
                     <div>
-                        {data && 'user authorized: ' + data.userId}
+                        {data ? 'USER AUTHORIZED: ' + data.userId : 'PLEASE LOGIN'}
                     </div>
                 </ul>
                 <hr/>

@@ -1,9 +1,12 @@
 'use client'
 import {FormEvent} from 'react';
 import {useLoginMutation} from '@/features/auth/authSlice';
+import {useAuthorizedRedirect} from "@/hooks/useAuthorizedRedirect";
 
 export default function LoginPage() {
   const [login, result] = useLoginMutation()
+
+    useAuthorizedRedirect()
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

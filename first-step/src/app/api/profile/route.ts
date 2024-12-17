@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const token = JSON.parse(tokenAsString)
   //console.log("token.expirationDate: ", token.expirationDate)
   //console.log(" new Date(): ",  new Date())
-  if (new Date(token.expirationDate) < new Date()) {
+  if (!token || new Date(token.expirationDate) < new Date()) {
     return Response.json({message: 'Not authorized'}, {
       status: 401,
     })

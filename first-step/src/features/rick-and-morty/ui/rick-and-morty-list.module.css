@@ -1,0 +1,21 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+.list a {
+  padding: 20px;
+  background: #1a003c;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  width: 400px;
+  margin-bottom: 10px;
+  transition: all .2s;
+}
+
+.list a:hover {
+  background: #2a0160;
+  color: #d5d5d5;
+}

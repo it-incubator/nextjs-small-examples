@@ -17,12 +17,19 @@ export const freshRickAndMortyApi = createApi({
             transformResponse: (response: any, meta, arg) => {
                     return response.results
             },
-            // Always merge incoming data to the cache entry
-            merge: (currentCache, newItems) => {
+            merge: (currentCache, newItems, {arg}) => {
+                //if requested page is first shouldn't merge cache data
+                if(arg.page !== 1) {
                 currentCache.push(...newItems)
+                } else {
+                    //override cache
+                    currentCache.length = 0;
+                    currentCache.push(...newItems)
+                }
             },
             // Refetch when the page arg changes
             forceRefetch({ currentArg, previousArg }) {
+                console.log('should refetch', currentArg !== previousArg)
                 return currentArg !== previousArg
             },
         }),

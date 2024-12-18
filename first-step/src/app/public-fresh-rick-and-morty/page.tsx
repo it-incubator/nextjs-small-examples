@@ -11,7 +11,7 @@ export default async function RickAndMortyPage({searchParams}: any) {
   return (
     <div>
         <h2>Public RickAndMortyFresh list</h2>
-      <RickAndMortyFreshList list={list.results}/>
+      <RickAndMortyFreshList preloadedList={list.results}/>
     </div>
   );
 }

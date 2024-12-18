@@ -1,36 +1,42 @@
 'use client'
 import {useAppStore} from "@/store/store";
-import React, {SyntheticEvent, useEffect, useRef, useState} from "react";
-import {freshPokemonApi, useGetPokemonsQuery} from "@/features/pokemon/fresh-slice";
+import React, {SyntheticEvent, useEffect, useRef, useState, useTransition} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useGetCharacterQuery} from "@/features/rick-and-morty/fresh-slice";
+import {freshRickAndMortyApi, useGetCharacterQuery} from "@/features/rick-and-morty/fresh-slice";
 
-export const RickAndMortyFreshList = ({ list }: any) => {
-    console.log('list', list)
+export const RickAndMortyFreshList = ({ preloadedList }: any) => {
+    console.log('preloadedList', preloadedList)
     const searchParams = useSearchParams();
     const router = useRouter();
-    const store = useAppStore()
-    const [page, setPage] = useState(1)
+    const store = useAppStore();
+    const FIRST_PAGE = 1;
+    const [page, setPage] = useState(FIRST_PAGE)
     const [searchName, setSearchName] = useState(searchParams.get('name') || '');
     // Using a query hook automatically fetches data and returns query values
     const requestArgs = {page: page, name: searchParams.get('name')}
 
-    const needInitPokemonsInStore = useRef(!!list)
-    // or get data with selector like in other example
-
     const {data, error, isLoading} = useGetCharacterQuery(requestArgs, {
-        skip: needInitPokemonsInStore.current
+        skip: page === FIRST_PAGE && !!preloadedList
     })
+    console.log('data',data)
 
     useEffect(() => {
-        if (needInitPokemonsInStore.current) {
+        if(preloadedList) {
             console.log('effect')
             store.dispatch(
-                freshPokemonApi.util.upsertQueryData('getPokemons', requestArgs, list)
+                freshRickAndMortyApi.util.upsertQueryData('getCharacter', requestArgs, preloadedList)
             );
-            needInitPokemonsInStore.current = false;
         }
-    }, [list])
+    }, [preloadedList])
+
+
+    useEffect(() => {
+        return () => {
+            store.dispatch(
+                freshRickAndMortyApi.util.resetApiState()
+            )
+        }
+    }, []);
 
     function next() {
         setPage(prev => prev + 1)
@@ -40,34 +46,27 @@ export const RickAndMortyFreshList = ({ list }: any) => {
         setSearchName(event.target.value)
     }
 
+    const [isPending, startTransition] = useTransition();
     function onKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
-        if(event.key === 'Enter') {
-            const params = new URLSearchParams(searchParams);
-            if(!searchName) {
-            params.delete('name');
-            } else {
-            params.set("name", searchName);
-            }
+        if (event.key === 'Enter') {
+            startTransition(() => {
+                setPage(FIRST_PAGE);
+                const params = new URLSearchParams(searchParams);
 
-            router.push(`?${params.toString()}`, { scroll: false });
+                if (!searchName) {
+                    params.delete('name');
+                } else {
+                    params.set('name', searchName);
+                }
+
+                router.push(`?${params.toString()}`, { scroll: false });
+            });
         }
     }
 
-
-    useEffect(() => {
-        return () => {
-            console.log('unmount')
-            store.dispatch(
-             freshPokemonApi.util.resetApiState()
-            )
-        }
-    }, [])
-
     console.log("isLoading: ", isLoading)
-    // Individual hooks are also accessible under the generated endpoints:
-    // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
 
-    const dataForRender = data || list;
+    const dataForRender = data || preloadedList;
 
     return (
         <div className="App">
@@ -78,16 +77,16 @@ export const RickAndMortyFreshList = ({ list }: any) => {
                 <>Loading...</>
             }
             { dataForRender &&
-                <div> <ul>{dataForRender.map((pokemon: any, index: number) => {
-                        return <li key={pokemon.id}>
-                            {index + 1} - {pokemon.name}
+                <div> <ul>{dataForRender.map((list: any, index: number) => {
+                        return <li key={list.id}>
+                            {index + 1} - {list.name}
                         </li>
 
                     }
                 )} </ul>
                     <button onClick={next}>NEXT</button>
                     <input onChange={onChange} onKeyDown={onKeyPress} value={searchName}/>
-                    filter values="rick" or "morty"
+                    name term ex. "rick", "morty". Enter to apply
                 </div>
             }
         </div>

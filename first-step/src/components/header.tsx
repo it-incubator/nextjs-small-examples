@@ -66,6 +66,14 @@ export const Header = () => {
                         <Link href={'/public-fresh-rick-and-morty/without-server-preloading'} prefetch={false}>public
                             fresh rick and morty list without-server-preloading</Link>
                     </li>
+                    <li>
+                        <Link href={'/public-fresh-rick-and-morty-lazy'} prefetch={false}>public fresh rick and morty
+                            lazy</Link>
+                    </li>
+                    <li>
+                        <Link href={'/public-fresh-rick-and-morty-lazy/without-server-preloading'} prefetch={false}>public
+                            fresh rick and morty lazy without-server-preloading</Link>
+                    </li>
                     <div>
                         {data ? 'USER AUTHORIZED: ' + data.userId : 'PLEASE LOGIN'}
                     </div>

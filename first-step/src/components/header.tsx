@@ -34,7 +34,8 @@ export const Header = () => {
                         <Link href={'/public-pokemons'} prefetch={false}>public pokemons with RTK cache</Link>
                     </li>
                     <li>
-                        <Link href={'/public-pokemons/without-server-preloading'} prefetch={false}>public pokemons with RTK cache
+                        <Link href={'/public-pokemons/without-server-preloading'} prefetch={false}>public pokemons with
+                            RTK cache
                             without-server-preloading</Link>
                     </li>
                     <li>
@@ -50,8 +51,28 @@ export const Header = () => {
                             hook</Link>
                     </li>
                     <li>
-                        <Link href={'/public-fresh-pokemons-lazy-hook/without-server-preloading'} prefetch={false}>public fresh pokemons lazy
+                        <Link href={'/public-fresh-pokemons-lazy-hook/without-server-preloading'} prefetch={false}>public
+                            fresh pokemons lazy
                             hook without-server-preloading</Link>
+                    </li>
+                    <li>
+                        -------------------------------
+                    </li>
+                    <li>
+                        <Link href={'/public-fresh-rick-and-morty'} prefetch={false}>public
+                            fresh rick and morty list</Link>
+                    </li>
+                    <li>
+                        <Link href={'/public-fresh-rick-and-morty/without-server-preloading'} prefetch={false}>public
+                            fresh rick and morty list without-server-preloading</Link>
+                    </li>
+                    <li>
+                        <Link href={'/public-fresh-rick-and-morty-lazy'} prefetch={false}>public fresh rick and morty
+                            lazy</Link>
+                    </li>
+                    <li>
+                        <Link href={'/public-fresh-rick-and-morty-lazy/without-server-preloading'} prefetch={false}>public
+                            fresh rick and morty lazy without-server-preloading</Link>
                     </li>
                     <div>
                         {data ? 'USER AUTHORIZED: ' + data.userId : 'PLEASE LOGIN'}

@@ -4,6 +4,7 @@ import {pokemonApi} from "@/features/pokemon/slice";
 import {authAPI, authReducer} from "@/features/auth/authSlice";
 import {TypedUseSelectorHook, useDispatch, useSelector, useStore} from "react-redux";
 import {freshPokemonApi} from "@/features/pokemon/fresh-slice";
+import {freshRickAndMortyApi} from "@/features/rick-and-morty/fresh-slice";
 
 
 
@@ -16,10 +17,11 @@ export const initializeStore = () => {
             auth: authReducer,
             [pokemonApi.reducerPath]: pokemonApi.reducer,
             [freshPokemonApi.reducerPath]: freshPokemonApi.reducer,
+            [freshRickAndMortyApi.reducerPath]: freshRickAndMortyApi.reducer,
             [authAPI.reducerPath]: authAPI.reducer,
         },
         middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(pokemonApi.middleware, freshPokemonApi.middleware, authAPI.middleware),
+            getDefaultMiddleware().concat(pokemonApi.middleware, freshPokemonApi.middleware, freshRickAndMortyApi.middleware, authAPI.middleware),
 
     })
     return store;

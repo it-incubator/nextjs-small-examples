@@ -4,7 +4,8 @@ import {useLoginMutation} from "@/store/services/auth/auth";
 import {useRedirectIfAuthorized} from "@/hooks/useRedirectIfAuthorized";
 
 export default function LoginPage() {
-    useRedirectIfAuthorized();
+    const {isLoading} = useRedirectIfAuthorized();
+
     console.log('rendered')
     const [login, result] = useLoginMutation()
 
@@ -15,6 +16,10 @@ export default function LoginPage() {
         login(json)
         // You can access form data here
         // Example: const login = formData.get('login');
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div>
     }
 
     return (

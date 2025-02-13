@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {useGetMeQuery} from "@/store/services/auth/auth";
 
-export const useRedirectIfAnonymousWithUser = () => {
+export const useRequireMeWithAnonymRedirect = () => {
     const router = useRouter()
 
     const {data, error, isLoading, isFetching} = useGetMeQuery()

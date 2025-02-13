@@ -30,10 +30,6 @@ export default function RootLayout({
     <StoreWrapper>
       {children}
     </StoreWrapper>
-    <div id="widget__pogoda" data-city_id="26851" style={ {minWidth: "200px", maxWidth: "500px"}}
-         aria-label="Прогноз погоды"></div>
-    <link href="https://pogoda.by/assets/static/widget/widget.css" rel="stylesheet"/>
-    <script src="https://pogoda.by/assets/static/widget/widget.js" defer=""></script>
     </body>
     </html>
   );

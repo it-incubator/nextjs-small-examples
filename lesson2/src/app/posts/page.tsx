@@ -1,14 +1,20 @@
 'use client'
 
 import {useGetPokemonByNameQuery} from "@/store/services/pokemon";
-import {useRedirectIfAnonymousWithUser} from "@/hooks/useRedirectIfAnonymousWithUser";
+import {useRequireMeWithAnonymRedirect} from "@/hooks/useRequireMeWithAnonymRedirect";
 
 export default function LoginPage() {
-    const meData = useRedirectIfAnonymousWithUser()
+    const meData = useRequireMeWithAnonymRedirect()
 
-    const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur')
+    const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur', {
+        skip: !meData,
+    })
     // Individual hooks are also accessible under the generated endpoints:
     // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
+
+    if (!meData) {
+        return <span>...</span>
+    }
 
     return (
         <div className="App">

@@ -11,6 +11,9 @@ export const useRedirectIfAuthorized = (redirecTo = '/posts') => {
         if (data && !isFetching) {
             // If user is not authorized, redirect to login page
             router.push(redirecTo)
+            // router.push(redirecTo + '/' + data.userId)
         }
     }, [data, isFetching])
+
+    return {isLoading}
 }

@@ -28,14 +28,16 @@ export const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
     // wait until the mutex is available without locking it
     await mutex.waitForUnlock()
+    // 1
     let result = await baseQueryWithAccessToken(args, api, extraOptions)
+
     if (result.error?.status === 401 ||
         (result.error?.status === 'PARSING_ERROR' && result.error?.originalStatus === 401)
     ) {
         console.log('baseQueryWithReauth: NEED REAUTH: ' + args)
         // checking whether the mutex is locked
         if (!mutex.isLocked()) {
-            const release = await mutex.acquire()
+            const release = await mutex.acquire() // блокируем
             try {
                 const refreshResult = await baseQueryWithAccessToken(
                     {
@@ -68,5 +70,6 @@ export const baseQueryWithReauth: BaseQueryFn<
             result = await baseQueryWithAccessToken(args, api, extraOptions)
         }
     }
+    // 2
     return result
 }

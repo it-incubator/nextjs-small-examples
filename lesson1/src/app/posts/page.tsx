@@ -2,7 +2,7 @@
 
 import {useGetPokemonByNameQuery} from "@/store/services/pokemon";
 
-export default function LoginPage() {
+export default function PostsPage() {
     const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur')
     // Individual hooks are also accessible under the generated endpoints:
     // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')

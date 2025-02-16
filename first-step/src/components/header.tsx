@@ -31,6 +31,9 @@ export const Header = () => {
                         <Link href={'/pokemons'} prefetch={false}>pokemons</Link>
                     </li>
                     <li>
+                        <Link href={'/pokemons/best'} prefetch={false}>Best pokemon</Link>
+                    </li>
+                    <li>
                         <Link href={'/public-pokemons'} prefetch={false}>public pokemons with RTK cache</Link>
                     </li>
                     <li>

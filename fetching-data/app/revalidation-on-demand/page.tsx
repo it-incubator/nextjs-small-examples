@@ -1,4 +1,4 @@
-import {TimeDisplay} from '@/shared/components';
+import {TimeFetcher} from '@/shared/components';
 
 /**
  * Using default behavior with caching the response from fetch with revalidation on demand
@@ -18,5 +18,5 @@ let counter = 0;
 export default async function RevalidationOnDemand() {
     console.log('RevalidationOnDemand rendering ' + ++counter)
 
-    return <TimeDisplay/>
+    return <TimeFetcher/>
 }

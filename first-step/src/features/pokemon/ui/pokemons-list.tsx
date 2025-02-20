@@ -42,7 +42,6 @@ export const PokemonsList = (props: any) => {
         console.log('pokemons upserted to store')
     }, [needInitPokemonsInStore])
 
-
     // Using a query hook automatically fetches data and returns query values
     const {data, error, isLoading} = useGetPokemonsQuery(offset, {
         skip: needInitPokemonsInStore

@@ -4,7 +4,7 @@ import './globals.css';
 import {ReduxWrapper} from '@/store/ReduxWrapper';
 import {Header} from '@/components/header';
 import type {ReactNode} from 'react'
-import {MSWProvider} from "@/app/MSWProvider";
+//import {MSWProvider} from "@/app/MSWProvider";
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -26,12 +26,12 @@ export default function RootLayout({children}: Readonly<{ children: ReactNode }>
     return (
         <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MSWProvider>
+        {/*<MSWProvider>*/}
         <ReduxWrapper>
             <Header/>
             {children}
         </ReduxWrapper>
-        </MSWProvider>
+        {/*</MSWProvider>*/}
         <footer>
             <hr/>
             FOOTER

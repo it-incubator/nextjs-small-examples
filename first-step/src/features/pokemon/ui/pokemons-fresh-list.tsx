@@ -6,7 +6,6 @@ import {freshPokemonApi, useGetPokemonsQuery} from "@/features/pokemon/fresh-sli
 
 export const PokemonsFreshList = ({pokemons}: any) => {
     console.log("PokemonList rendering...")
-    console.log(new Date().toISOString())
     const store = useAppStore()
     const [offset, setOffset] = useState(0)
     // Using a query hook automatically fetches data and returns query values
@@ -19,7 +18,6 @@ export const PokemonsFreshList = ({pokemons}: any) => {
     })
 
     useEffect(() => {
-       // const needInitPokemonsInStore = !!pokemons && !data;
         if (needInitPokemonsInStore.current) {
             store.dispatch(
                 freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
@@ -29,15 +27,9 @@ export const PokemonsFreshList = ({pokemons}: any) => {
         }
     }, [pokemons])
 
-    console.log('data', data)
-
-    console.log('offset!!',offset)
     function next() {
         setOffset(prev => prev + 10)
     }
-
-    console.log('pokemons: ', pokemons)
-
 
     useEffect(() => {
         return () => {

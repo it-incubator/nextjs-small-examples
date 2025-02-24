@@ -21,6 +21,7 @@ export const PokemonsFreshListLazy = ({pokemons}: any) => {
     useEffect(() => {
         if (!!pokemons) {
             store.dispatch(
+                //@ts-ignore
                 freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
             );
             console.log('pokemons upserted to store')

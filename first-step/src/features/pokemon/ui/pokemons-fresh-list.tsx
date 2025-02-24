@@ -22,6 +22,7 @@ export const PokemonsFreshList = ({pokemons}: any) => {
        // const needInitPokemonsInStore = !!pokemons && !data;
         if (needInitPokemonsInStore.current) {
             store.dispatch(
+                //@ts-ignore
                 freshPokemonApi.util.upsertQueryData('getPokemons', 0, pokemons)
             );
             console.log('pokemons upserted to store')

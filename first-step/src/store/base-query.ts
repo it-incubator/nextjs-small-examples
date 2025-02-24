@@ -13,6 +13,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8888/api/',
   prepareHeaders: (headers, {getState}) => {
     // you can take accessToken from localStorage/sessionStorage
+    //@ts-ignore
     const token = (getState() as RootState).auth.accessToken
 
     // If we have a token set in state, let's assume that we should be passing it.
@@ -43,6 +44,7 @@ export const baseQueryWithReauth: BaseQueryFn<
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
       try {
+        //@ts-ignore
         const refreshResult = await baseQuery(
             {
               url: 'auth/refresh',

@@ -15,6 +15,7 @@ export const PokemonsList = (props: any) => {
     // вернуть состояние offset для локальноо стейта, благодаря тому, что rtk query хранит аргументы, с которыми
     //  был вызван квериХук
     const {data: dataFromCache, originalArgs} = useAppSelector((state) =>
+        //@ts-ignore
         pokemonApi.endpoints.getPokemons.select()(state)
     )
 
@@ -37,6 +38,7 @@ export const PokemonsList = (props: any) => {
             // const { data, error, isLoading } = useGetPokemonsQuery(offset)
             // у нас ещё не будет данных
             store.dispatch(
+                //@ts-ignore
                 pokemonApi.util.upsertQueryData('getPokemons', 0, props.pokemons)
             );
         console.log('pokemons upserted to store')

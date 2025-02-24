@@ -1,8 +1,8 @@
 'use client'
-import {useAppStore} from "@/store/store";
-import React, {SyntheticEvent, useEffect, useRef, useState, useTransition} from "react";
-import {useRouter, useSearchParams} from "next/navigation";
-import {freshRickAndMortyApi, useGetCharacterQuery} from "@/features/rick-and-morty/fresh-slice";
+import {useAppStore} from '@/store/store';
+import React, {SyntheticEvent, useEffect, useRef, useState, useTransition} from 'react';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {freshRickAndMortyApi, useGetCharacterQuery} from '@/features/rick-and-morty/fresh-slice';
 
 export const RickAndMortyFreshList = ({ preloadedList }: any) => {
     console.log('preloadedList', preloadedList)
@@ -24,6 +24,7 @@ export const RickAndMortyFreshList = ({ preloadedList }: any) => {
         if(preloadedList) {
             console.log('effect')
             store.dispatch(
+                //@ts-ignore
                 freshRickAndMortyApi.util.upsertQueryData('getCharacter', requestArgs, preloadedList)
             );
         }

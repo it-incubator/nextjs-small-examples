@@ -7,6 +7,7 @@ import {useSearchParams} from 'next/navigation';
 
 export default function Confirmation() {
   //const [count, setCount] = useState(0)
+    //@ts-ignore
   const count = useSelector((state: RootState) => state.counter.value)
   const dispatch = useDispatch()
 

@@ -1,4 +1,4 @@
-import {TimeDisplay} from '@/shared/components';
+import {TimeFetcher} from '@/shared/components';
 
 /**
  * Using default behavior with caching the response from fetch
@@ -13,5 +13,5 @@ let counter = 0;
 export default async function StaticGeneration() {
     console.log('StaticGeneration rendered ' + ++counter)
 
-    return <TimeDisplay />
+    return <TimeFetcher />
 }

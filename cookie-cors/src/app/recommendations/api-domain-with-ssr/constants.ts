@@ -1,0 +1,1 @@
+export const baseUrl = 'https://api.it-incubator.xxx/api/api-domain-with-ssr'

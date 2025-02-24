@@ -10,7 +10,7 @@ export default async function PokemonsPage({params}: any) {
   return (
     <div>
         <h2>Public Pokemon list</h2>
-      <PokemonsList pokemons={pokemons.results}/>
+        <PokemonsList pokemons={pokemons.results}/>
     </div>
   );
 }

@@ -43,6 +43,7 @@ export default function RootLayout({children}: Readonly<{ children: ReactNode }>
             <main className={styles.main}>
                 <nav className={styles.nav}>
                     <Link href={ROUTES.DynamicRequest} prefetch={false}>Dynamic request (SSR)</Link>
+                    <Link href={ROUTES.ImplicitDynamicRequest} prefetch={false}> Implicit Dynamic request (SSR)</Link>
                     <Link href={ROUTES.StaticGeneration} prefetch={false}>Static generation (SSG)</Link>
                     <Link href={ROUTES.TimeBasedRevalidation} prefetch={false}>Time based revalidation (ISG)</Link>
                     <Link href={ROUTES.RevalidationOnDemand} prefetch={false}>Revalidation on demand (ISG)</Link>

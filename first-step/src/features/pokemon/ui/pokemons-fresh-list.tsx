@@ -26,7 +26,7 @@ export const PokemonsFreshList = ({pokemons}: any) => {
             console.log('pokemons upserted to store')
             needInitPokemonsInStore.current = false;
         }
-    }, [pokemons])
+    }, [])
 
     function next() {
         setOffset(prev => prev + 10)

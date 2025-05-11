@@ -2,6 +2,7 @@ export const REQUEST_URL = 'https://timeapi.io/api/time/current/zone?timeZone=Eu
 
 export const ROUTES = {
   DynamicRequest: '/dynamic-request',
+  ImplicitDynamicRequest: '/implicit-dynamic-attributes-request',
   StaticGeneration: '/static-generation',
   TimeBasedRevalidation: '/time-based-revalidation',
   RevalidationOnDemand: '/revalidation-on-demand',

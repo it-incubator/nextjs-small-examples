@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const Header = () => {
 
-    const {data, isLoading, error} = useGetMeQuery();
+    const {data, isLoading} = useGetMeQuery();
 
     return <div>
         <Link href={'/'}>LOGO</Link>... Menu items
@@ -14,11 +14,6 @@ export const Header = () => {
                 ? <span>Hello user {data.userId} <Logout/> </span>
                 : <Link href={'/login'}>Login</Link>}
         </div>
-        {/*<div>*/}
-        {/*    {isLoading || !data ? <Link href={'/login'}>Login</Link>*/}
-        {/*        : <span>Hello user {data.userId} <Logout/> </span>*/}
-        {/*       }*/}
-        {/*</div>*/}
     </div>
 }
 

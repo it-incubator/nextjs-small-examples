@@ -3,7 +3,7 @@
 import {useGetPokemonByNameQuery} from "@/store/services/pokemon";
 import {useRequireMeWithAnonymRedirect} from "@/hooks/useRequireMeWithAnonymRedirect";
 
-export default function LoginPage() {
+export default function PostsPage() {
     const meData = useRequireMeWithAnonymRedirect()
 
     const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur', {

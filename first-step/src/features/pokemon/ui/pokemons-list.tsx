@@ -2,7 +2,7 @@
 import {pokemonApi, useGetPokemonsQuery} from "@/features/pokemon/slice";
 import Link from "next/link";
 import {useAppSelector, useAppStore} from "@/store/store";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 
 // задача, чтобы сервер вернул нам уже отрендеренный список, чтобы клиент не делал повторный запрос, но чтобы в редаксе был данный стейт,
 // чтобы можно было делать инфинити скроллинг и подгружать следюущие страницы уже через клиент

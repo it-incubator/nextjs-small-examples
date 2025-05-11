@@ -1,7 +1,6 @@
 'use client'
 
-import {useGetMeQuery, useGetProfileQuery} from '@/features/auth/authSlice';
-import {useEffect} from "react";
+import {useGetProfileQuery} from '@/features/auth/authSlice';
 import {useMeWithAnonymRedirect} from "@/hooks/useMeWithAnonymRedirect";
 
 export default function LoginPage() {

@@ -22,37 +22,34 @@ export const baseQueryWithReauthWithoutMutexAsExample: BaseQueryFn<
     unknown,
     FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-    let result = await baseQueryWithAccessToken(args, api, extraOptions)
+    let result = await baseQueryWithAccessToken(args, api, extraOptions) // 🚀 main request, example /me or /messages
 
     if (result.error?.status === 401 ||
-        (result.error?.status === 'PARSING_ERROR' && result.error?.originalStatus === 401)
+        (result.error?.status === 'PARSING_ERROR' && result.error?.originalStatus === 401) // ❌ 401 response, accessToken expired
     ) {
-            try {
-                const refreshResult = await baseQueryWithAccessToken(
-                    {
-                        url: 'auth/refresh', method: 'POST', body: {}, // Include the body if needed, e.g., { refreshToken: '...' }
-                    },
-                    api,
-                    extraOptions
-                )
-                if (refreshResult.data) {
-                    sessionStorage.setItem('access-token', refreshResult.data.accessToken)
-                    result = await baseQueryWithAccessToken(args, api, extraOptions)
-                    return result;
-                } else {
-                    return result;
-                }
-            } catch (error) {
-                console.error(error)
-                return result;
+        try {
+            const refreshResult = await baseQueryWithAccessToken( // 🌈 refresh tokens pair
+                {
+                    url: 'auth/refresh', method: 'POST', body: {}, // Include the body if needed, e.g., { refreshToken: '...' }
+                },
+                api,
+                extraOptions
+            )
+            if (refreshResult.data) {
+                sessionStorage.setItem('access-token', refreshResult.data.accessToken)
+                result = await baseQueryWithAccessToken(args, api, extraOptions) // repeat 🚀 main request with fresh accesstoken
+                return result; // ✅ success response
+            } else {
+                return result; // ❌ 401 response
             }
+        } catch (error) {
+            console.error(error)
+            return result; // ❌ 401 response
         }
-    else {
-        return result;
     }
+
+    return result; // some of these answers ❌ 400 | 500 | 200 | 201 | 403
 }
-
-
 
 
 // create a new mutex
@@ -64,17 +61,23 @@ export const baseQueryWithReauth: BaseQueryFn<
     FetchBaseQueryError
 > = async (args, api, extraOptions) => {
     // wait until the mutex is available without locking it
-    await mutex.waitForUnlock()
-    // 1
-    let result = await baseQueryWithAccessToken(args, api, extraOptions)
+    await mutex.waitForUnlock() // может кто-то уже в процессе получения новой пары токенов? я подожду await,
+    // зачем мне делать заведомо not authorized запрос
 
-    if (result.error?.status === 401 ||
-        (result.error?.status === 'PARSING_ERROR' && result.error?.originalStatus === 401)
-    ) {
+    // 1
+    let result = await baseQueryWithAccessToken(args, api, extraOptions) // 🚀 main request, example /me or /messages
+
+    if (result.error?.status === 401 || result.error?.originalStatus === 401) {
         console.log('baseQueryWithReauth: NEED REAUTH: ' + args)
         // checking whether the mutex is locked
-        if (!mutex.isLocked()) {
-            const release = await mutex.acquire() // блокируем
+        if (mutex.isLocked()) {
+            // wait until the mutex is available without locking it
+            await mutex.waitForUnlock()
+            return baseQueryWithAccessToken(args, api, extraOptions) // или ❌ или ✅
+        }
+        else {
+            // пока я делал свой запрос, кто-то мог заблокировать mutex
+            const release = await mutex.acquire() // блокируем mutex
             try {
                 const refreshResult = await baseQueryWithAccessToken(
                     {
@@ -88,7 +91,7 @@ export const baseQueryWithReauth: BaseQueryFn<
                 if (refreshResult.data) {
                     // @ts-ignore
                     sessionStorage.setItem('access-token', refreshResult.data.accessToken)
-                    result = await baseQueryWithAccessToken(args, api, extraOptions)
+                    return await baseQueryWithAccessToken(args, api, extraOptions)
                 } else {
                     // api.dispatch(loggedOut())
                     // posiible scenario if refresh токен тоже короткоживущий и вкладка долго открыта, то пользователь нажмёт
@@ -96,16 +99,10 @@ export const baseQueryWithReauth: BaseQueryFn<
                 }
             } catch (error) {
                 console.error(error)
-            }
-            finally {
+            } finally {
                 // release must be called once the mutex should be released again.
                 release()
             }
-        }
-        else {
-            // wait until the mutex is available without locking it
-            await mutex.waitForUnlock()
-            result = await baseQueryWithAccessToken(args, api, extraOptions)
         }
     }
     // 2

@@ -17,5 +17,5 @@ export const useRedirectIfAuthorized = (redirecTo = '/posts') => {
     }, [data])
     //}, [data, isFetching])
 
-    return {isLoading}
+    return isLoading
 }

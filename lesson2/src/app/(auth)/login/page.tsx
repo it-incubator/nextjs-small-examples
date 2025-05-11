@@ -4,7 +4,7 @@ import {useLoginMutation} from "@/store/services/auth/auth";
 import {useRedirectIfAuthorized} from "@/hooks/useRedirectIfAuthorized";
 
 export default function LoginPage() {
-    const {isLoading} = useRedirectIfAuthorized();
+    const isLoading = useRedirectIfAuthorized();
 
     console.log('rendered')
     const [login, result] = useLoginMutation()

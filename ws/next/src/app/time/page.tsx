@@ -3,10 +3,10 @@
 import {useServerTimeQuery} from "@/store/services/time.api";
 
 export default function PostsPage() {
-    const { data, error, isLoading } = useServerTimeQuery(undefined, {
-        refetchOnMountOrArgChange: false,
-        pollingInterval: 0,
-    })
+    const { data, error, isLoading } = useServerTimeQuery();
+    // -> useSelector(selector) -> useEffect() -> const {store} = useContext(Provider)
+    // const unsubscribe = store
+    // .subscribe(() => { const selectedState = selector(store.getState())  })
 
     if (isLoading) {
         return <span>...</span>

@@ -10,16 +10,16 @@ export const timeAPI = createApi({
     //baseQuery: baseQueryWithAccessToken,
     endpoints: (builder) => ({
         serverTime: builder.query<{ time: string }, void>({
-            queryFn: async () => ({ data: { time: '---' } }), // short-circuits baseQuery
+            queryFn: async () => ({ data: { time: '---' } }), // чтобы не полетел http запрос
             keepUnusedDataFor: 0, // 👈 cleanup immediately after unmount
             async onCacheEntryAdded(
                 arg,
                 { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
             ) {
+                await cacheDataLoaded;
+
                 console.log('❤️ Connection will be created')
                 const ws = io('http://localhost:3001');
-
-                await cacheDataLoaded;
 
                 ws.on('connect', () => {
                     console.log('✅ Connected to server');
@@ -30,7 +30,6 @@ export const timeAPI = createApi({
                     updateCachedData((draft) => {
                         draft.time = data.time;
                     })
-
                 });
 
                 // cacheEntryRemoved will resolve when the cache subscription is no longer active

@@ -19,7 +19,7 @@ export const coursesApi = createApi({
     tagTypes: ['Courses'],
     endpoints: (builder) => ({
         getCourses: builder.query<CoursesResponse, number>({
-            keepUnusedDataFor: 0,
+            keepUnusedDataFor: 60,
             query: (page = 1) => `courses?page=${page}&limit=5`,
             serializeQueryArgs: ({endpointName}) => endpointName, // один ключ на все страницы
             merge: (currentCache, newData) => {

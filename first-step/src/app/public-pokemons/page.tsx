@@ -13,4 +13,4 @@ export default async function PokemonsPage({params}: any) {
         <PokemonsList pokemons={pokemons.results}/>
     </div>
   );
-}
+

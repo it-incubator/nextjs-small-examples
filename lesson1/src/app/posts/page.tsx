@@ -3,9 +3,12 @@
 import {useGetPokemonByNameQuery} from "@/store/services/pokemon";
 
 export default function PostsPage() {
-    const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur')
-    // Individual hooks are also accessible under the generated endpoints:
-    // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
+    const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur') // useEffect -> useDispatch: dispatch(tc()) / useSelector(selector) -> useContext
+    // -> useEffect -> store.subscribe(() => {
+    //     const state = store.getState();
+    //     const substate = selector(state)
+    //   useState()
+    // })
 
     return (
         <div className="App">
@@ -22,3 +25,5 @@ export default function PostsPage() {
         </div>
     )
 }
+
+

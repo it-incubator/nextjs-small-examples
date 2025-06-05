@@ -5,8 +5,8 @@ import {baseQueryWithAccessToken, baseQueryWithReauth} from "@/store/services/ba
 export const authAPI = createApi({
     reducerPath: 'authAPI',
     tagTypes: ['me'],
-     baseQuery: baseQueryWithReauth,
-    // baseQuery: baseQueryWithAccessToken,
+    baseQuery: baseQueryWithReauth,
+    //baseQuery: baseQueryWithAccessToken,
     endpoints: (builder) => ({
         login: builder.mutation<{ accessToken: string }, {
             login: string,

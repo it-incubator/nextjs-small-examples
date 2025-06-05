@@ -1,0 +1,39 @@
+@startuml Case2_SecondWaits_Interleaved
+title Case 2 – Refresh in progress, second thread arrives during it
+
+participant "Thread #1" as T1
+participant "Thread #2" as T2
+participant Mutex
+participant "Resource API" as API
+participant "Auth /refresh" as AUTH
+
+== T1 начинает запрос ==
+T1 -> Mutex : waitForUnlock()
+Mutex --> T1
+T1 -> API   : baseQueryWithAccessToken(args₁)
+API --> T1  : 401 Unauthorized
+
+== T1 пытается обновить токен ==
+T1 -> Mutex : acquire() 🔒
+Mutex --> T1
+T1 -> AUTH  : POST /auth/refresh
+
+== В это же время T2 стартует ==
+T2 -> Mutex : waitForUnlock()
+note right of T2 : T2 ждёт, mutex пока заблокирован
+
+== T1 получает обновление ==
+AUTH --> T1 : 200 OK (new token)
+T1 -> Mutex : release() 🔓
+Mutex --> T1
+
+== T2 продолжает после release ==
+T2 --> Mutex : unblocked
+T2 -> API    : baseQueryWithAccessToken(args₂)
+API --> T2   : 200 OK (assumes valid new token)
+
+== T1 повторяет свой запрос ==
+T1 -> API    : baseQueryWithAccessToken(args₁) (retry)
+API --> T1   : 200 OK
+
+@enduml

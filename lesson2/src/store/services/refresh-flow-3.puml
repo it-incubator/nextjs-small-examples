@@ -1,0 +1,48 @@
+@startuml Case3_Both401_Race_Interleaved
+title Case 3 – Оба потока получают 401, первый захватывает mutex, второй ждёт
+
+participant "Thread #1" as T1
+participant "Thread #2" as T2
+participant Mutex
+participant "Resource API" as API
+participant "Auth /refresh" as AUTH
+
+== T1 начинает ==
+T1 -> Mutex : waitForUnlock()
+Mutex --> T1
+T1 -> API   : baseQueryWithAccessToken(args₁)
+API --> T1  : 401 Unauthorized
+
+== T2 почти одновременно стартует ==
+T2 -> Mutex : waitForUnlock()
+Mutex --> T2
+T2 -> API   : baseQueryWithAccessToken(args₂)
+API --> T2  : 401 Unauthorized
+
+== T1 выигрывает гонку за mutex ==
+T1 -> Mutex : acquire() 🔒
+Mutex --> T1
+
+== T2 замечает, что mutex занят ==
+T2 -> Mutex : isLocked() → true
+T2 -> Mutex : waitForUnlock()
+note right of T2 : блокируется, ждёт release
+
+== T1 обновляет токен ==
+T1 -> AUTH  : POST /auth/refresh
+AUTH --> T1 : 200 OK (new token)
+
+== T1 повторяет свой запрос ==
+T1 -> API : baseQueryWithAccessToken(args₁) (retry)
+API --> T1 : 200 OK
+
+== T1 освобождает мьютекс ==
+T1 -> Mutex : release() 🔓
+Mutex --> T1
+
+== T2 разблокирован и продолжает ==
+T2 --> Mutex : unblocked
+T2 -> API : baseQueryWithAccessToken(args₂) (retry)
+API --> T2 : 200 OK
+
+@enduml

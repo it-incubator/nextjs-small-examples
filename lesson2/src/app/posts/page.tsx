@@ -2,6 +2,7 @@
 
 import {useGetPokemonByNameQuery} from "@/store/services/pokemon";
 import {useRequireMeWithAnonymRedirect} from "@/hooks/useRequireMeWithAnonymRedirect";
+import {useGetMeQuery} from "@/store/services/auth/auth";
 
 export default function PostsPage() {
     const meData = useRequireMeWithAnonymRedirect()
@@ -13,7 +14,7 @@ export default function PostsPage() {
     // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
 
     if (!meData) {
-        return <span>...</span>
+        return <span>...</span> // or skeleton or loader
     }
 
     return (

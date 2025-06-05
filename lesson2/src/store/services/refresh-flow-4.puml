@@ -1,0 +1,30 @@
+@startuml Case4_RefreshFails_Interleaved
+title Case 4 – Refresh token тоже истёк ➜ logout
+
+participant "Thread #1" as T1
+participant Mutex
+participant "Resource API" as API
+participant "Auth /refresh" as AUTH
+participant "Frontend Store\n(dispatch loggedOut)" as STORE
+
+== T1 делает основной запрос ==
+T1 -> Mutex : waitForUnlock()
+Mutex --> T1
+T1 -> API   : baseQueryWithAccessToken(args)
+API --> T1  : 401 Unauthorized
+
+== T1 пытается обновить токен ==
+T1 -> Mutex : acquire() 🔒
+Mutex --> T1
+T1 -> AUTH  : POST /auth/refresh
+AUTH --> T1 : 401 Unauthorized (refresh токен протух)
+
+== T1 вылогинивает пользователя ==
+T1 -> STORE : dispatch(loggedOut)
+note right: clear auth state,\nredirect to /login, etc.
+
+== T1 освобождает мьютекс ==
+T1 -> Mutex : release() 🔓
+Mutex --> T1
+
+@enduml

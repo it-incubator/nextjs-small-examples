@@ -20,7 +20,8 @@ export default function LoginPage() {
 
     if (isLoading) {
         return <div>Loading...</div>
-    }
+    } // возомжно и не делать такоую загрзку а показывать поьзователю логин.. через секунду его
+    // всё равно отсюда редиректнет если он щалогинен
 
     return (
         <div>

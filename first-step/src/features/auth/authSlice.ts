@@ -43,7 +43,8 @@ export const authAPI = createApi({
         try {
           const {data} = await queryFulfilled; // Wait for the mutation to complete
           // alternative option: set token to localAtorage
-          dispatch(setToken({accessToken: data.accessToken})); // Dispatch the token to your authSlice
+
+          //dispatch(setToken({accessToken: data.accessToken})); // Dispatch the token to your authSlice
           await dispatch(authAPI.endpoints.getMe.initiate());
         } catch (error) {
           console.error('Login failed:', error);

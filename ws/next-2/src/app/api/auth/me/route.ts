@@ -1,5 +1,3 @@
-import {delay} from "@/app/api/auth/refresh/route";
-
 export async function GET(req: Request) {
   /**
    1. проверяет accessToken:
@@ -10,8 +8,6 @@ export async function GET(req: Request) {
    1.4 берем id пользователя из второй части токена
    2. на сонове id берёт данные из БД
   */
-
-  await delay(3000)
   const headers = req.headers
   const authorizationHeader = headers.get('Authorization'); // "Bearer ACCESS_TOKEN" "Basic base64(login:pass)"
   if (!authorizationHeader) {

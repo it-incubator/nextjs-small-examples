@@ -1,0 +1,60 @@
+@startuml
+actor "User\n(Resource Owner)" as User
+participant "Frontend\n(User Agent)\nit-kamasutra.com" as Frontend
+participant "Backend\n(OAuth Client)\nit-kamasutra.com" as Backend
+participant "OAuth Provider\n(Authorization Server)\nGitHub" as Provider
+participant "Resource Server\n(Our Resource Server)\nit-kamasutra.com" as ResourceServer
+
+note over Frontend
+  Домен: it-kamasutra.com
+  Пользователь видит страницу с кнопкой "Login with GitHub"
+end note
+
+== 1. Инициация логина ==
+  User -> Frontend : Нажимает «Login with GitHub»
+  Frontend -> Backend : GET /auth/provider?type=github&redirectUri
+  activate Backend
+  Backend -> Provider : GET https://github.com/login/oauth/authorize\n(response_type=code, client_id, redirect_uri, scope)
+
+== 2. Перенаправление и логин на GitHub ==
+note over Provider
+  GitHub отображает форму логина и запрос прав
+end note
+
+Provider -> User : Запрос логина/пароля
+activate User
+User --> Provider : Вводит учётные данные
+deactivate User
+
+== 3. Callback к бэкенду ==
+Provider -> Backend : Redirect to backend_redirect_uri\n?code=AUTH_CODE
+activate Backend
+
+== 4. Обмен кода на токены ==
+Backend -> Provider : POST https://github.com/login/oauth/access_token\n(client_id, client_secret, code, redirect_uri)
+activate Provider
+Provider --> Backend : { ext_access_token, ext_refresh_token? }
+deactivate Provider
+
+== 5. Получение данных пользователя ==
+Backend -> Provider : GET https://api.github.com/user\nAuthorization: Bearer ext_access_token
+activate Provider
+Provider --> Backend : { user_info }
+deactivate Provider
+
+== 6. Регистрация/логин и генерация внутренних токенов ==
+note over Backend
+  Регистрирует или логинит пользователя
+  в системе it-kamasutra.com
+  Генерирует { app_access_token, app_refresh_token }
+end note
+Backend --> Frontend : { app_access_token, app_refresh_token }
+deactivate Backend
+
+== 7. Доступ к защищённым ресурсам ==
+Frontend -> ResourceServer : GET /api/profile\nAuthorization: Bearer app_access_token
+activate ResourceServer
+ResourceServer --> Frontend : { user profile }
+deactivate ResourceServer
+
+@enduml

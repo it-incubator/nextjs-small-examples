@@ -1,0 +1,64 @@
+@startuml
+actor "User\n(Resource Owner)" as User
+participant "Frontend\n(User Agent)\nit-kamasutra.com" as Frontend
+participant "Backend\n(OAuth Client)\nit-kamasutra.com" as Backend
+participant "OAuth Provider\n(Authorization Server)\nGoogle" as Provider
+participant "Resource Server\n(Our Resource Server)\nit-kamasutra.com" as ResourceServer
+
+note over Frontend
+  Домен: it-kamasutra.com
+  Пользователь видит страницу с кнопкой "Login with Google"
+end note
+
+== 1. Инициация логина ==
+
+  User -> Frontend : Нажимает «Login with Google»
+  Frontend -> Provider : GET https://accounts.google.com/o/oauth2/v2/auth?client_id=…\n&redirect_uri=…\n&response_type=code\n&scope=openid email profile\n&access_type=offline
+
+
+== 2. Перенаправление на провайдера ==
+alt Direct by Frontend
+  note over Frontend
+
+note over Provider
+  Google отображает форму логина
+end note
+
+Provider -> User : Запрос логина/пароля
+activate User
+User --> Provider : Вводит учётные данные
+deactivate User
+
+== 3. Callback к фронтенду ==
+Provider -> Frontend : Redirect to frontend_redirect_uri\n?code=AUTH_CODE
+activate Frontend
+
+== 4. Передача кода на бэкенд ==
+Frontend -> Backend : POST /auth/callback\n{ code: AUTH_CODE }
+activate Backend
+
+== 5. Обмен кода на токенах ==
+Backend -> Provider : POST /token\n(grant_type=authorization_code, code=AUTH_CODE, client_id, client_secret, redirect_uri)
+activate Provider
+Provider --> Backend : { ext_access_token, ext_refresh_token }
+deactivate Provider
+
+== 6. Получение данных пользователя ==
+Backend -> Provider : GET /userinfo\nAuthorization: Bearer ext_access_token
+activate Provider
+Provider --> Backend : { user_info }
+deactivate Provider
+
+== 7. Регистрация/логин и генерация внутренних токенов ==
+note over Backend
+  Регистрирует/логинит пользователя\nв системе it-kamasutra.com\nГенерирует { app_access_token, app_refresh_token }
+end note
+Backend --> Frontend : { app_access_token, app_refresh_token }
+deactivate Backend
+
+== 8. Доступ к защищённым ресурсам ==
+Frontend -> ResourceServer : GET /api/profile\nAuthorization: Bearer app_access_token
+activate ResourceServer
+ResourceServer --> Frontend : { user profile }
+deactivate ResourceServer
+@enduml

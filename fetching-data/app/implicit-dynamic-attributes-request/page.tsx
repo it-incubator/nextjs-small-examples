@@ -1,7 +1,7 @@
-'use client'
-import {TimeFetcher} from '@/shared/components';
-import {useSearchParams} from "next/navigation";
+//'use client'
 import {Suspense} from "react";
+import {Wrapper} from "@/app/implicit-dynamic-attributes-request/wrapper";
+//import { cookies } from "next/headers";
 
 /**
  * Feature used in Server Component | Why it's dynamic
@@ -26,6 +26,8 @@ let counter = 0
 
 // SSR, почему не юзаем для страницы пользователя?
 export default function ImplicitDynamicRequest() {
+
+    //const cookie = cookies();
     console.log('ImplicitDynamicRequest rendered: ' + ++counter)
     return (
         <div> This is static content should be regenerated each time
@@ -37,8 +39,3 @@ export default function ImplicitDynamicRequest() {
     )
 }
 
-function Wrapper() {
-    console.log('ImplicitDynamicRequest Wrapper: ' + ++counter)
-    const param = useSearchParams();
-    return <>from dynamic server component: <TimeFetcher/></>
-}

@@ -16,7 +16,7 @@ export const baseQueryWithAccessToken = fetchBaseQuery({
     },
 })
 
-
+// as example for lessons
 export const baseQueryWithReauthWithoutMutexAsExample: BaseQueryFn<
     string | FetchArgs,
     unknown,
@@ -54,7 +54,7 @@ export const baseQueryWithReauthWithoutMutexAsExample: BaseQueryFn<
 
 // create a new mutex
 const mutex = new Mutex()
-
+// for using
 export const baseQueryWithReauth: BaseQueryFn<
     string | FetchArgs,
     unknown,

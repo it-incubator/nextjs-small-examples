@@ -7,10 +7,10 @@ export default async function PokemonsPage({params}: any) {
     const pokemons = await pokemonsResponse.json();
     console.log('POKEMONS LOADED')
 
-  return (
-    <div>
-        <h2>Public Pokemon list</h2>
-        <PokemonsList pokemons={pokemons.results}/>
-    </div>
-  );
-
+    return (
+        <div>
+            <h2>Public Pokemon list</h2>
+            <PokemonsList pokemons={pokemons.results}/>
+        </div>
+    );
+}

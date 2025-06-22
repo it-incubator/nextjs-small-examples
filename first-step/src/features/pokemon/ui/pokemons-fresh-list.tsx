@@ -38,6 +38,17 @@ export const PokemonsFreshList = ({pokemons}: any) => {
             store.dispatch(
              freshPokemonApi.util.resetApiState()
             )
+
+            // попробовать эту версию
+            // store.dispatch(
+            //     freshPokemonApi.internalActions.removeQueryResult({
+            //         endpointName: 'getPokemons',
+            //         queryCacheKey: entry.queryCacheKey,
+            //     })
+            // )
+
+                //  а может заапсертить пустой массив,?    freshPokemonApi.util.upsertQueryData('getPokemons', 0, [])
+            // или использовать keepUnusedDataFor
         }
     }, [])
 

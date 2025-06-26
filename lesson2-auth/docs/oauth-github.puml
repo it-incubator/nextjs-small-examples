@@ -12,9 +12,9 @@ end note
 
 == 1. Инициация логина ==
   User -> Frontend : Нажимает «Login with GitHub»
-  Frontend -> Backend : GET /auth/provider?type=github&redirectUri
+  Frontend -> Backend : GET /auth/provider?type=github&redirect_front_uri
   activate Backend
-  Backend -> Provider : GET https://github.com/login/oauth/authorize\n(response_type=code, client_id, redirect_uri, scope)
+  Backend -> Provider : GET https://github.com/login/oauth/authorize\n(response_type=code, client_id, redirect_back_uri, scope)
 
 == 2. Перенаправление и логин на GitHub ==
 note over Provider
@@ -47,6 +47,8 @@ note over Backend
   Регистрирует или логинит пользователя
   в системе it-kamasutra.com
   Генерирует { app_access_token, app_refresh_token }
+  и редиректит на front-end (refresh токен в куке, а acсess возможно теряется
+  или в query параметре )
 end note
 Backend --> Frontend : { app_access_token, app_refresh_token }
 deactivate Backend

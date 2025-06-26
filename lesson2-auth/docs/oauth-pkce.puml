@@ -1,0 +1,27 @@
+@startuml
+actor User
+participant Browser
+participant "Client App\n(SPA / Mobile)" as Client
+participant "GitHub Auth Server" as Auth
+participant "GitHub Token Endpoint" as Token
+participant "Your API" as API
+
+== Инициализация ==
+Client -> Client: generate code_verifier\n(+ code_challenge = SHA256)
+Client -> Browser: 302 /authorize?\n  response_type=code\n  client_id=…\n  redirect_uri=…\n  code_challenge &\n  code_challenge_method=S256
+
+== Авторизация ==
+Browser -> Auth: GET /authorize …               #1
+Auth -> User: Login + Consent form              #2
+User -> Auth: credentials & approval            #3
+Auth --> Browser: 302 redirect_uri?code=AUTH_CODE #4
+Browser --> Client: AUTH_CODE                   #5
+
+== Обмен кода на токен ==
+Client -> Token: POST /token\n  grant_type=authorization_code\n  code=AUTH_CODE\n  redirect_uri=…\n  code_verifier        #6
+Token --> Client: access_token (+refresh_token) #7
+
+== Доступ к защищённым ресурсам ==
+Client -> API: Authorization: Bearer access_token #8
+API --> Client: protected resource                #9
+@enduml

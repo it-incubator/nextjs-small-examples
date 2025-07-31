@@ -9,6 +9,7 @@ export const useRequireMeWithAnonymRedirect = () => {
 
     useEffect(() => {
         if (!data && !isFetching) {
+            // save to localStorage/sessionStorage current page. чтобы после авпоториазии вернуть пользвоателя именно сюда
             // If user is not authorized, redirect to login page
             router.push('/login')
         }

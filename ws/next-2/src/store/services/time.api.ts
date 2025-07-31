@@ -43,7 +43,6 @@ export const timeAPI = createApi({
                 };
 
                 ws.on('notification', onNotification);
-
                 await cacheEntryRemoved;
                 ws.off('notification', onNotification);
             },

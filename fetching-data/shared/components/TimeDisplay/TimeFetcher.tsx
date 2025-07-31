@@ -1,8 +1,8 @@
-import {PrettyDate} from '@/shared/components';
-import {fetchDate} from '@/shared/utils';
+import {fetchPokemon} from "@/shared/utils/fetchDate";
+import {PokemonName} from "@/shared/components/PrettyDate/PrettyDate";
 
-export const TimeFetcher = async () => {
-  const dateTime = await fetchDate()
+export const PokemonFetcher = async () => {
+  const pokemon = await fetchPokemon()
 
-  return <PrettyDate date={dateTime} />
+  return <PokemonName pokemon={pokemon} />
 }

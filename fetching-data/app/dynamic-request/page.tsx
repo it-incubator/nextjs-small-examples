@@ -1,4 +1,4 @@
-import {TimeFetcher} from '@/shared/components';
+import {PokemonFetcher} from "@/shared/components/TimeDisplay/TimeFetcher";
 
 /**
  * Turning off default behavior with caching the response from fetch with option { cache: 'no-store' } or export const dynamic = 'force-dynamic'
@@ -11,5 +11,5 @@ let counter = 0
 export default async function DynamicRequest() {
     console.log( 'DynamicRequest rendered: ' + ++counter)
 
-    return <>from dynamic server component: <TimeFetcher /></>
+    return <>from dynamic server component: <PokemonFetcher /></>
 }

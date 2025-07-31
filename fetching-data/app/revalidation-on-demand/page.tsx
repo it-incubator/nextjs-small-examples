@@ -1,4 +1,4 @@
-import {TimeFetcher} from '@/shared/components';
+import {PokemonFetcher} from "@/shared/components/TimeDisplay/TimeFetcher";
 
 /**
  * Using default behavior with caching the response from fetch with revalidation on demand
@@ -18,5 +18,5 @@ let counter = 0;
 export default async function RevalidationOnDemand() {
     console.log('RevalidationOnDemand rendering ' + ++counter)
 
-    return <TimeFetcher/>
+    return <PokemonFetcher />
 }

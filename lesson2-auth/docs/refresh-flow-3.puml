@@ -11,12 +11,14 @@ participant "Auth /refresh" as AUTH
 T1 -> Mutex : waitForUnlock()
 Mutex --> T1
 T1 -> API   : baseQueryWithAccessToken(args₁)
-API --> T1  : 401 Unauthorized
 
 == T2 почти одновременно стартует ==
 T2 -> Mutex : waitForUnlock()
 Mutex --> T2
 T2 -> API   : baseQueryWithAccessToken(args₂)
+
+== Оба получают 401 ==
+API --> T1  : 401 Unauthorized
 API --> T2  : 401 Unauthorized
 
 == T1 выигрывает гонку за mutex ==

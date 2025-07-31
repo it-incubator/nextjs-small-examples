@@ -1,8 +1,9 @@
 'use client'
 
-import {Loader, PrettyDate} from '@/shared/components';
-import {fetchDate} from '@/shared/utils';
+import {Loader} from '@/shared/components';
 import {useEffect, useState} from 'react'
+import {fetchPokemon} from "@/shared/utils/fetchDate";
+import {PokemonName} from "@/shared/components/PrettyDate/PrettyDate";
 
 /**
  * Fetching data on client-side as usual in SPA. You can replace local state with global one (RTK with RTK-query, for instance, or etc.)
@@ -10,19 +11,19 @@ import {useEffect, useState} from 'react'
 export default function ClientSideRequest() {
     console.log("ClientSideRequest rendering")
     const [message] = useState<string>('hello')
-    const [dateTime, setDateTime] = useState<string | null>(null)
+    const [pokemon, setPokemon] = useState<any>(null)
 
     useEffect(() => {
         console.log("ClientSideRequest useEffect")
-        fetchDate().then((dateTime) => {
-            setDateTime(dateTime)
+        fetchPokemon().then((pokemon) => {
+            setPokemon(pokemon)
         })
     }, [])
 
-    if (!dateTime) return <div>
+    if (!pokemon) return <div>
         Loader returned by Server {message}
         <Loader/>
     </div>
 
-    return <PrettyDate date={dateTime}/>
+    return <PokemonName pokemon={pokemon}/>
 }

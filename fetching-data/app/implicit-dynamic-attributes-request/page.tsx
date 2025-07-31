@@ -1,6 +1,7 @@
 //'use client'
 import {Suspense} from "react";
 import {Wrapper} from "@/app/implicit-dynamic-attributes-request/wrapper";
+import { cookies } from "next/headers";
 //import { cookies } from "next/headers";
 
 /**
@@ -27,7 +28,7 @@ let counter = 0
 // SSR, почему не юзаем для страницы пользователя?
 export default function ImplicitDynamicRequest() {
 
-    //const cookie = cookies();
+    const cookie = cookies();
     console.log('ImplicitDynamicRequest rendered: ' + ++counter)
     return (
         <div> This is static content should be regenerated each time

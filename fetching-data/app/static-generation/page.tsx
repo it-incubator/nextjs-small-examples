@@ -1,4 +1,4 @@
-import {TimeFetcher} from '@/shared/components';
+import {PokemonFetcher} from "@/shared/components/TimeDisplay/TimeFetcher";
 
 /**
  * Using default behavior with caching the response from fetch
@@ -13,5 +13,5 @@ let counter = 0;
 export default async function StaticGeneration() {
     console.log('StaticGeneration rendered ' + ++counter)
 
-    return <TimeFetcher />
+    return <PokemonFetcher />
 }

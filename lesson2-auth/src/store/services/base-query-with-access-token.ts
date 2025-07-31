@@ -30,15 +30,18 @@ export const baseQueryWithReauthWithoutMutexAsExample: BaseQueryFn<
         try {
             const refreshResult = await baseQueryWithAccessToken( // 🌈 refresh tokens pair
                 {
-                    url: 'auth/refresh', method: 'POST', body: {}, // Include the body if needed, e.g., { refreshToken: '...' }
+                    url: 'auth/refresh', method: 'POST', body: {
+                        refreshToken: localStorage.getItem('refresh-token')
+                    }, // Include the body if needed, e.g., { refreshToken: '...' }
                 },
                 api,
                 extraOptions
             )
             if (refreshResult.data) {
                 sessionStorage.setItem('access-token', refreshResult.data.accessToken)
-                result = await baseQueryWithAccessToken(args, api, extraOptions) // repeat 🚀 main request with fresh accesstoken
-                return result; // ✅ success response
+                localStorage.setItem('refresh-token', refreshResult.data.refreshToken)
+                const newResult  = await baseQueryWithAccessToken(args, api, extraOptions) // repeat 🚀 main request with fresh accesstoken
+                return newResult; // ✅ success response
             } else {
                 return result; // ❌ 401 response
             }
@@ -54,6 +57,7 @@ export const baseQueryWithReauthWithoutMutexAsExample: BaseQueryFn<
 
 // create a new mutex
 const mutex = new Mutex()
+// const successRefresh = false; // default true
 // for using
 export const baseQueryWithReauth: BaseQueryFn<
     string | FetchArgs,

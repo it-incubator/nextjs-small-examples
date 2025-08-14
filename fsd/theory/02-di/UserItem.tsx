@@ -5,6 +5,8 @@ type UserItemProps = {
         name: string;
     };
     actionButtonsSlot: React.ReactElement
+    // or renderProps
+    // or via children
 };
 
 export function UserItem({ user, actionButtonsSlot }: UserItemProps) {

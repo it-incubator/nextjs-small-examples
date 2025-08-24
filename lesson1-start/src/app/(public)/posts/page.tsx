@@ -15,7 +15,7 @@ export default function PostsPage() {
             {error ? (
                 <>Oh no, there was an error</>
             ) : isLoading ? (
-                <>Loading...</>
+                <>Loading...!!!!!!</>
             ) : data ? (
                 <>
                     <h3>{data.species.name}</h3>

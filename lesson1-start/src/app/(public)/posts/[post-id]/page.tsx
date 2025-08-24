@@ -2,7 +2,7 @@
 
 import {useParams, useSearchParams} from "next/navigation";
 
-export default function LoginPage() {
+export default function PostPage() {
 
     const params = useParams()
     const postId = params['post-id']

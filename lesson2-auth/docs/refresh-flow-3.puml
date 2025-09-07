@@ -19,13 +19,14 @@ T2 -> API   : baseQueryWithAccessToken(args₂)
 
 == Оба получают 401 ==
 API --> T1  : 401 Unauthorized
-API --> T2  : 401 Unauthorized
+
 
 == T1 выигрывает гонку за mutex ==
 T1 -> Mutex : acquire() 🔒
 Mutex --> T1
 
 == T2 замечает, что mutex занят ==
+API --> T2  : 401 Unauthorized
 T2 -> Mutex : isLocked() → true
 T2 -> Mutex : waitForUnlock()
 note right of T2 : блокируется, ждёт release

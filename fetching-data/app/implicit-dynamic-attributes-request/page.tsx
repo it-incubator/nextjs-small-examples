@@ -2,7 +2,6 @@
 import {Suspense} from "react";
 import {Wrapper} from "@/app/implicit-dynamic-attributes-request/wrapper";
 import { cookies } from "next/headers";
-//import { cookies } from "next/headers";
 
 /**
  * Feature used in Server Component | Why it's dynamic

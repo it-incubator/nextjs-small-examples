@@ -5,7 +5,7 @@ import {useRequireMeWithAnonymRedirect} from "@/hooks/useRequireMeWithAnonymRedi
 import {useGetMeQuery} from "@/store/services/auth/auth";
 
 export default function PostsPage() {
-    const meData = useRequireMeWithAnonymRedirect()
+    const {data: meData, isLoading: isMeDataLoading} = useGetMeQuery()
 
     const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur', {
         skip: !meData,
@@ -13,12 +13,16 @@ export default function PostsPage() {
     // Individual hooks are also accessible under the generated endpoints:
     // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
 
-    if (!meData) {
-        return <span>...</span> // or skeleton or loader
+    if (!meData && isMeDataLoading) {
+        return <span>your account is detecting...</span> // or skeleton or loader
+    }
+
+    if (!meData && !isMeDataLoading) {
+        return <span>Not authorized</span> // or skeleton or loader
     }
 
     if (isLoading) {
-        return <span>...</span> // or skeleton or loader
+        return <span>Posts loading...</span> // or skeleton or loader
     }
 
     return (

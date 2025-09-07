@@ -1,0 +1,50 @@
+{
+  "name": "lesson1",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "devHttps": "next dev --turbopack --experimental-https",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.5.0",
+    "async-mutex": "^0.5.0",
+    "next": "15.1.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.2.0"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^4.1.1",
+    "@eslint/eslintrc": "^3",
+    "@storybook/addon-a11y": "^9.1.5",
+    "@storybook/addon-docs": "^9.1.5",
+    "@storybook/addon-vitest": "^9.1.5",
+    "@storybook/nextjs-vite": "^9.1.5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitest/browser": "^3.2.4",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.4",
+    "eslint-plugin-storybook": "^9.1.5",
+    "msw": "^2.11.1",
+    "msw-storybook-addon": "^2.0.5",
+    "playwright": "^1.55.0",
+    "storybook": "^9.1.5",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "pnpm@10.7.1+sha512.2d92c86b7928dc8284f53494fb4201f983da65f0fb4f0d40baafa5cf628fa31dae3e5968f12466f17df7e97310e30f343a648baea1b9b350685dafafffdf5808",
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}

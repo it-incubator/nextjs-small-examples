@@ -2,15 +2,14 @@ import {createApi} from '@reduxjs/toolkit/query/react';
 import {
     baseQueryWithAccessToken,
     baseQueryWithReauth,
-    baseQueryWithReauthWithoutMutexAsExample
 } from "@/store/services/base-query-with-access-token";
 
 
 export const authAPI = createApi({
     reducerPath: 'authAPI',
     tagTypes: ['me'],
-    // baseQuery: baseQueryWithReauth,
-     baseQuery: baseQueryWithReauthWithoutMutexAsExample,
+     baseQuery: baseQueryWithReauth,
+     // baseQuery: baseQueryWithReauthWithoutMutexAsExample,
     endpoints: (builder) => ({
         login: builder.mutation<{ accessToken: string }, {
             login: string,

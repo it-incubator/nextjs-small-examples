@@ -17,7 +17,7 @@ export const baseQueryWithAccessToken = fetchBaseQuery({
 })
 
 // as example for lessons
-export const baseQueryWithReauthWithoutMutexAsExample: BaseQueryFn<
+export const baseQueryWithRefreshWithoutMutexAsExample: BaseQueryFn<
     string | FetchArgs,
     unknown,
     FetchBaseQueryError

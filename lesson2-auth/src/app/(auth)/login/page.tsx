@@ -10,7 +10,6 @@ export default function LoginPage() {
     const [login, result] = useLoginMutation()
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        debugger;
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const json: any = Object.fromEntries(formData.entries());

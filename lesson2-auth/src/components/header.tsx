@@ -10,9 +10,9 @@ export const Header = () => {
         <Link href={'/'}>LOGO</Link>... Menu items
         <Link href={'/posts'}>Posts</Link>
         <div>
-            {isLoading ? <span>...</span> : data
-                ? <span>Hello user {data.userId} <Logout/> </span>
-                : <Link href={'/login'}>Login</Link>}
+            { isLoading && <span>...</span> }
+            { !isLoading && data && <span>Hello user {data.userId} <Logout/> </span> }
+            { !isLoading && !data && <Link href={'/login'}>Login</Link> }
         </div>
     </div>
 }

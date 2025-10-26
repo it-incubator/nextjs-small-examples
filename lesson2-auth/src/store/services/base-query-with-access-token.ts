@@ -28,6 +28,14 @@ export const baseQueryWithRefreshWithoutMutexAsExample: BaseQueryFn<
         (result.error?.status === 'PARSING_ERROR' && result.error?.originalStatus === 401) // ❌ 401 response, accessToken expired
     ) {
         try {
+            // 🍔 бургер оптимизация (название фо фан не настоящее) в приницпе.. если у нас нет акксе токена.. то и не имеет смысла делать рефреш, потому что у нас либо 2 токена есть.. либо ни одного
+            // такая полубесполезная микрооптимизация.. скорее для разминки мозгов и лучшего понимания процесса
+            //
+            // const token = localStorage.getItem('access-token'); // обратите внимание
+            // if (!token) {
+            //     return result;
+            // }
+
             const refreshResult = await baseQueryWithAccessToken( // 🌈 refresh tokens pair
                 {
                     url: 'auth/refresh', method: 'POST', body: {
@@ -43,15 +51,17 @@ export const baseQueryWithRefreshWithoutMutexAsExample: BaseQueryFn<
                 const newResult  = await baseQueryWithAccessToken(args, api, extraOptions) // repeat 🚀 main request with fresh accesstoken
                 return newResult; // ✅ success response
             } else {
+                // localStorage.removeItem('access-token'); // это если делаем 🍔 оптимизацию
                 return result; // ❌ 401 response
             }
         } catch (error) {
             console.error(error)
+            // localStorage.removeItem('access-token'); 🍔 оптимизацию
             return result; // ❌ 401 response
         }
     }
 
-    return result; // some of these answers ❌ 400 | 500 | 200 | 201 | 403
+    return result; // some of these answers ❌ 400 | 500 | 200 | 201 | 403 // Forbidden
 }
 
 
@@ -67,7 +77,6 @@ export const baseQueryWithReauth: BaseQueryFn<
     // wait until the mutex is available without locking it
     await mutex.waitForUnlock() // может кто-то уже в процессе получения новой пары токенов? я подожду await,
     // зачем мне делать заведомо not authorized запрос
-
     // 1
     let result = await baseQueryWithAccessToken(args, api, extraOptions) // 🚀 main request, example /me or /messages
 

@@ -17,4 +17,3 @@ export const useRequireMeWithAnonymRedirect = () => {
 
     return data
 }
-

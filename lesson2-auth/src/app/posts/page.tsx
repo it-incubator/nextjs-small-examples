@@ -9,7 +9,6 @@ export default function PostsPage() {
 
     const { data, error, isLoading, isFetching } = useGetPokemonByNameQuery('bulbasaur', {
         skip: !meData,
-
     })
     // Individual hooks are also accessible under the generated endpoints:
     // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')

@@ -45,15 +45,11 @@ export const baseQueryWithRefreshWithoutMutexAsExample: BaseQueryFn<
                 api,
                 extraOptions
             )
-            if (refreshResult.data) {
-                sessionStorage.setItem('access-token', refreshResult.data.accessToken)
-                localStorage.setItem('refresh-token', refreshResult.data.refreshToken)
-                const newResult  = await baseQueryWithAccessToken(args, api, extraOptions) // repeat 🚀 main request with fresh accesstoken
-                return newResult; // ✅ success response
-            } else {
-                // localStorage.removeItem('access-token'); // это если делаем 🍔 оптимизацию
-                return result; // ❌ 401 response
-            }
+            sessionStorage.setItem('access-token', refreshResult.data.accessToken)
+            localStorage.setItem('refresh-token', refreshResult.data.refreshToken)
+
+            const newResult = await baseQueryWithAccessToken(args, api, extraOptions) // repeat 🚀 main request with fresh accesstoken
+            return newResult; // ✅ success response
         } catch (error) {
             console.error(error)
             // localStorage.removeItem('access-token'); 🍔 оптимизацию
@@ -87,8 +83,7 @@ export const baseQueryWithReauth: BaseQueryFn<
             // wait until the mutex is available without locking it
             await mutex.waitForUnlock()
             return baseQueryWithAccessToken(args, api, extraOptions) // или ❌ или ✅
-        }
-        else {
+        } else {
             // пока я делал свой запрос, кто-то мог заблокировать mutex
             const release = await mutex.acquire() // 🔒 блокируем mutex
             try {
@@ -102,15 +97,10 @@ export const baseQueryWithReauth: BaseQueryFn<
                     extraOptions
                 )
                 if (refreshResult.data) {
-                    // @ts-ignore
                     sessionStorage.setItem('access-token', refreshResult.data.accessToken)
                     return await baseQueryWithAccessToken(args, api, extraOptions)
-                } else {
-                    // api.dispatch(loggedOut())
-                    // posiible scenario if refresh токен тоже короткоживущий и вкладка долго открыта, то пользователь нажмёт
-                    // кнопку, а у него протух и аккссее и рефреш, то в этом случае нужно явно его вылогинить (зачистить auth информацию в стейте)
-                    // ❌ clear all tokens
                 }
+
             } catch (error) {
                 console.error(error)
                 // ❌ clear all tokens

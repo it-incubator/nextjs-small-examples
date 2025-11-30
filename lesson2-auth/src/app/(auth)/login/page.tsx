@@ -13,7 +13,7 @@ export default function LoginPage() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const json: any = Object.fromEntries(formData.entries());
-        const response = await login(json).unwrap()
+        const response = await login(json)
         console.log(response)
         // You can access form data here
         // Example: const login = formData.get('login');

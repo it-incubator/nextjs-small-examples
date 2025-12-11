@@ -38,6 +38,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/github/update-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update tokens for GitHub OAuth user
+         * @description Generate new pair of access and refresh tokens for GitHub OAuth authenticated user
+         */
+        post: operations["GithubOauthController_updateTokens"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/google/login": {
         parameters: {
             query?: never;
@@ -208,7 +228,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/update-tokens": {
+    "/api/v1/auth/update": {
         parameters: {
             query?: never;
             header?: never;
@@ -219,6 +239,23 @@ export interface paths {
         put?: never;
         /**  'Generate new pair of access and refresh tokens (in cookie client must send correct refresh Token that will be revoked after refreshing) Device LastActiveDate should\n' +
          *     'be overrode by issued Date of new refresh token', */
+        post: operations["AuthController_updateToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/update-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @deprecated */
         post: operations["AuthController_updateTokens"];
         delete?: never;
         options?: never;
@@ -312,6 +349,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DynamicMetricsController_getMetrics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/notifications/mark-as-read": {
         parameters: {
             query?: never;
@@ -374,6 +427,26 @@ export interface paths {
         put?: never;
         /** @description Create post */
         post: operations["PostsController_createPost"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/all/{endCursorPostId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all posts with pagination
+         * @description Get all posts with infinite pagination. Token is optional - if provided, returns personalized data (likes, etc.)
+         */
+        get: operations["PostsController_getAllPostsNoParam"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1074,7 +1147,7 @@ export interface components {
             fileSize: number;
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.163Z
+             * @example 2025-12-11T15:26:09.622Z
              */
             createdAt?: string;
         };
@@ -1085,18 +1158,20 @@ export interface components {
             messageText: string;
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.902Z
+             * @example 2025-12-11T15:26:11.543Z
              */
             createdAt: string;
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.902Z
+             * @example 2025-12-11T15:26:11.543Z
              */
             updatedAt: string;
             messageType: components["schemas"]["MessageType"];
             status: components["schemas"]["MessageStatus"];
             userName: string;
             avatars: components["schemas"]["AvatarViewDto"][];
+            /** @description Количество непрочитанных сообщений в диалоге */
+            notReadCount: number;
         };
         MessageViewModel: {
             id: number;
@@ -1105,12 +1180,12 @@ export interface components {
             messageText: string;
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.902Z
+             * @example 2025-12-11T15:26:11.543Z
              */
             createdAt: string;
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.902Z
+             * @example 2025-12-11T15:26:11.543Z
              */
             updatedAt: string;
             messageType: components["schemas"]["MessageType"];
@@ -1138,18 +1213,37 @@ export interface components {
             /** @example http://localhost:3000 */
             baseUrl?: string;
         };
+        ValidationFieldError: {
+            /**
+             * @example Password must contain only Latin letters, numbers, and special characters.
+             * @enum {string}
+             */
+            message: "Password must contain only Latin letters, numbers, and special characters." | "The ban reason cannot be empty." | "Incorrect email" | "dateOfBirth must be a valid Date format" | "must be a number";
+            field: string;
+        };
+        ValidationErrorResponseDto: {
+            /** @example 400 */
+            statusCode: number;
+            messages: components["schemas"]["ValidationFieldError"][];
+            /** @example Bad Request */
+            error: string;
+        };
+        ConfirmationCodeInputDto: {
+            /** @description Code that be sent via Email inside link */
+            confirmationCode: string;
+        };
         FieldError: {
-            message: string;
+            /**
+             * @description Error message from EXCEPTION_KEYS_ENUM
+             * @enum {string}
+             */
+            message: "invalid password or email" | "Authorization error" | "Unauthorized" | "Please complete your registration by confirming your email. Check your inbox and click on the confirmation link to proceed." | "Password must contain only Latin letters, numbers, and special characters." | "The ban reason cannot be empty." | "Incorrect email" | "dateOfBirth must be a valid Date format" | "must be a number" | "The number of files is too large, please upload the file less than 10" | "The file size is too large, please upload the file less than 20MB" | "The file size is too large, please upload the file less than 10MB" | "The file format is incorrect, please upload the correct file" | "User not found" | "Profile not found with profileId" | "User with id: {} not found" | "User not found with id {}" | "Unsupported payment method: {}" | "Invalid Stripe session response: missing required fields" | "Stripe payment method failed: {}" | "Invalid PayPal session response: missing required fields" | "PayPal payment method failed: {}" | "Stripe webhook error" | "PayPal webhook error" | "Authentication error" | "Something went wrong" | "No access rights" | "receiverId must not be equal to userId" | "Bad request" | "Recaptcha is not valid" | "Session not found" | "some error occurred" | "Bad Request" | "Forbidden" | "Not Found" | "Internal Server Error" | "Conflict";
             field: string;
         };
         ApiErrorResultDto: {
             statusCode: number;
             messages: components["schemas"]["FieldError"][];
             error: string;
-        };
-        ConfirmationCodeInputDto: {
-            /** @description Code that be sent via Email inside link */
-            confirmationCode: string;
         };
         RegistrationEmailResendingInputDto: {
             /**
@@ -1178,6 +1272,34 @@ export interface components {
         TokenTypeSwaggerDto: {
             accessToken: string;
         };
+        AuthFieldError: {
+            /**
+             * @example invalid password or email
+             * @enum {string}
+             */
+            message: "invalid password or email" | "Please complete your registration by confirming your email. Check your inbox and click on the confirmation link to proceed.";
+            field: string;
+        };
+        AuthErrorResponseDto: {
+            /** @example 400 */
+            statusCode: number;
+            messages: components["schemas"]["AuthFieldError"][];
+            /** @example Bad Request */
+            error: string;
+        };
+        UnauthorizedErrorResponseDto: {
+            /** @example 401 */
+            statusCode: number;
+            /** @example [
+             *       {
+             *         "message": "Authorization error",
+             *         "field": "authorization"
+             *       }
+             *     ] */
+            messages: components["schemas"]["AuthFieldError"][];
+            /** @example Unauthorized */
+            error: string;
+        };
         PasswordRecoveryInputDto: {
             /**
              * @description Email User for recovery
@@ -1188,6 +1310,22 @@ export interface components {
             recaptcha: string;
             /** @example http://localhost:3000 */
             baseUrl?: string;
+        };
+        RecaptchaFieldError: {
+            /**
+             * @example Recaptcha is not valid
+             * @enum {string}
+             */
+            message: "Recaptcha is not valid";
+            /** @example recaptcha */
+            field: string;
+        };
+        RecaptchaErrorResponseDto: {
+            /** @example 400 */
+            statusCode: number;
+            messages: components["schemas"]["RecaptchaFieldError"][];
+            /** @example Bad Request */
+            error: string;
         };
         PasswordRecoveryResendingInputDto: {
             /**
@@ -1286,7 +1424,7 @@ export interface components {
             /** @example About me */
             aboutMe: string | null;
             avatars: components["schemas"]["AvatarViewDto"][];
-            /** @example 2025-06-24T15:12:01.163Z */
+            /** @example 2025-12-11T15:26:09.622Z */
             createdAt?: string;
         };
         UpdateProfileInputDto: {
@@ -1312,7 +1450,7 @@ export interface components {
             region?: string | null;
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.240Z
+             * @example 2025-12-11T15:26:09.797Z
              */
             dateOfBirth?: string;
             /**
@@ -1323,6 +1461,22 @@ export interface components {
         };
         AvatarsViewModel: {
             avatars: components["schemas"]["AvatarViewDto"][];
+        };
+        FileUploadFieldError: {
+            /**
+             * @example The file size is too large, please upload the file less than 10MB
+             * @enum {string}
+             */
+            message: "The number of files is too large, please upload the file less than 10" | "The file size is too large, please upload the file less than 10MB" | "The file size is too large, please upload the file less than 20MB" | "The file format is incorrect, please upload the correct file";
+            /** @example file */
+            field: string;
+        };
+        FileUploadErrorResponseDto: {
+            /** @example 400 */
+            statusCode: number;
+            messages: components["schemas"]["FileUploadFieldError"][];
+            /** @example Bad Request */
+            error: string;
         };
         ResponseCountRegisteredUsers: {
             /** @example 100 */
@@ -1346,6 +1500,23 @@ export interface components {
             avatars: components["schemas"]["AvatarViewDto"][];
             userMetadata: components["schemas"]["UserMetadata"];
             hasPaymentSubscription: boolean;
+            isFollowing?: boolean;
+            isFollowedBy?: boolean;
+        };
+        UserFieldError: {
+            /**
+             * @example User not found
+             * @enum {string}
+             */
+            message: "User not found" | "Profile not found with profileId";
+            field: string;
+        };
+        UserErrorResponseDto: {
+            /** @example 400 */
+            statusCode: number;
+            messages: components["schemas"]["UserFieldError"][];
+            /** @example Bad Request */
+            error: string;
         };
         ProfileViewAfterSearchModel: {
             id: number;
@@ -1490,7 +1661,7 @@ export interface components {
             fileSize: number;
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.163Z
+             * @example 2025-12-11T15:26:09.622Z
              */
             createdAt?: string;
             uploadId: string;
@@ -1523,18 +1694,18 @@ export interface components {
             images: components["schemas"]["PostImageViewModel"][];
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.480Z
+             * @example 2025-12-11T15:26:10.418Z
              */
             createdAt: string;
             /**
              * Format: date-time
-             * @example 2025-06-24T15:12:01.480Z
+             * @example 2025-12-11T15:26:10.418Z
              */
             updatedAt: string;
             /** @example 1 */
             ownerId: number;
             /** @example https://storage.yandexcloud.net/users-inctagram/users/41/avatar/3359612b-cff9-4b6b-8897-fbbd09153d51-images-45x45 */
-            avatarOwner?: string;
+            avatarOwner: string;
             /** @example {
              *       "firstName": "firstName",
              *       "lastName": "lastName"
@@ -1613,6 +1784,77 @@ export interface components {
     headers: never;
     pathItems: never;
 }
+export type SchemaInfinityPaginationViewModel = components['schemas']['InfinityPaginationViewModel'];
+export type SchemaMessageType = components['schemas']['MessageType'];
+export type SchemaMessageStatus = components['schemas']['MessageStatus'];
+export type SchemaAvatarViewDto = components['schemas']['AvatarViewDto'];
+export type SchemaLastMessageViewDto = components['schemas']['LastMessageViewDto'];
+export type SchemaMessageViewModel = components['schemas']['MessageViewModel'];
+export type SchemaUpdateMessagesStatusDto = components['schemas']['UpdateMessagesStatusDto'];
+export type SchemaRegisterInputDto = components['schemas']['RegisterInputDto'];
+export type SchemaValidationFieldError = components['schemas']['ValidationFieldError'];
+export type SchemaValidationErrorResponseDto = components['schemas']['ValidationErrorResponseDto'];
+export type SchemaConfirmationCodeInputDto = components['schemas']['ConfirmationCodeInputDto'];
+export type SchemaFieldError = components['schemas']['FieldError'];
+export type SchemaApiErrorResultDto = components['schemas']['ApiErrorResultDto'];
+export type SchemaRegistrationEmailResendingInputDto = components['schemas']['RegistrationEmailResendingInputDto'];
+export type SchemaLoginInputDto = components['schemas']['LoginInputDto'];
+export type SchemaTokenTypeSwaggerDto = components['schemas']['TokenTypeSwaggerDto'];
+export type SchemaAuthFieldError = components['schemas']['AuthFieldError'];
+export type SchemaAuthErrorResponseDto = components['schemas']['AuthErrorResponseDto'];
+export type SchemaUnauthorizedErrorResponseDto = components['schemas']['UnauthorizedErrorResponseDto'];
+export type SchemaPasswordRecoveryInputDto = components['schemas']['PasswordRecoveryInputDto'];
+export type SchemaRecaptchaFieldError = components['schemas']['RecaptchaFieldError'];
+export type SchemaRecaptchaErrorResponseDto = components['schemas']['RecaptchaErrorResponseDto'];
+export type SchemaPasswordRecoveryResendingInputDto = components['schemas']['PasswordRecoveryResendingInputDto'];
+export type SchemaPasswordRecoveryCodeInputDto = components['schemas']['PasswordRecoveryCodeInputDto'];
+export type SchemaPasswordRecoveryViewDto = components['schemas']['PasswordRecoveryViewDto'];
+export type SchemaNewPasswordInputDto = components['schemas']['NewPasswordInputDto'];
+export type SchemaMeViewDto = components['schemas']['MeViewDto'];
+export type SchemaSessionViewModel = components['schemas']['SessionViewModel'];
+export type SchemaGetAllUserSessionsResponseDto = components['schemas']['GetAllUserSessionsResponseDto'];
+export type SchemaProfileViewModel = components['schemas']['ProfileViewModel'];
+export type SchemaUpdateProfileInputDto = components['schemas']['UpdateProfileInputDto'];
+export type SchemaAvatarsViewModel = components['schemas']['AvatarsViewModel'];
+export type SchemaFileUploadFieldError = components['schemas']['FileUploadFieldError'];
+export type SchemaFileUploadErrorResponseDto = components['schemas']['FileUploadErrorResponseDto'];
+export type SchemaResponseCountRegisteredUsers = components['schemas']['ResponseCountRegisteredUsers'];
+export type SchemaUserMetadata = components['schemas']['UserMetadata'];
+export type SchemaPublicProfileViewModel = components['schemas']['PublicProfileViewModel'];
+export type SchemaUserFieldError = components['schemas']['UserFieldError'];
+export type SchemaUserErrorResponseDto = components['schemas']['UserErrorResponseDto'];
+export type SchemaProfileViewAfterSearchModel = components['schemas']['ProfileViewAfterSearchModel'];
+export type SchemaUserWithPaginationViewDto = components['schemas']['UserWithPaginationViewDto'];
+export type SchemaProfileWithPostsViewModel = components['schemas']['ProfileWithPostsViewModel'];
+export type SchemaUserSubscriptionInputDto = components['schemas']['UserSubscriptionInputDto'];
+export type SchemaUserFollowingFollowersViewModel = components['schemas']['UserFollowingFollowersViewModel'];
+export type SchemaFollowingWithPaginationViewModel = components['schemas']['FollowingWithPaginationViewModel'];
+export type SchemaCreateSubscriptionInputDto = components['schemas']['CreateSubscriptionInputDto'];
+export type SchemaPaymentSessionUrlViewModel = components['schemas']['PaymentSessionUrlViewModel'];
+export type SchemaActiveSubscriptionViewModel = components['schemas']['ActiveSubscriptionViewModel'];
+export type SchemaCurrentActiveSubscriptionsViewModel = components['schemas']['CurrentActiveSubscriptionsViewModel'];
+export type SchemaPaymentsViewModel = components['schemas']['PaymentsViewModel'];
+export type SchemaPricingDetailsViewModel = components['schemas']['PricingDetailsViewModel'];
+export type SchemaSubscriptionPriceViewModel = components['schemas']['SubscriptionPriceViewModel'];
+export type SchemaNotificationViewDto = components['schemas']['NotificationViewDto'];
+export type SchemaUpdateNotificationIsReadDto = components['schemas']['UpdateNotificationIsReadDto'];
+export type SchemaProviderCodeInputDto = components['schemas']['ProviderCodeInputDto'];
+export type SchemaProviderLoginResSwaggerDto = components['schemas']['ProviderLoginResSwaggerDto'];
+export type SchemaPostImageViewModel = components['schemas']['PostImageViewModel'];
+export type SchemaUploadedImageViewModel = components['schemas']['UploadedImageViewModel'];
+export type SchemaChildMetadataDto = components['schemas']['ChildMetadataDto'];
+export type SchemaCreatePostInputDto = components['schemas']['CreatePostInputDto'];
+export type SchemaOwner = components['schemas']['Owner'];
+export type SchemaPostViewModel = components['schemas']['PostViewModel'];
+export type SchemaUpdatePostInputDto = components['schemas']['UpdatePostInputDto'];
+export type SchemaUpdateLikeStatusDto = components['schemas']['UpdateLikeStatusDto'];
+export type SchemaInfinityPaginatedPosts = components['schemas']['InfinityPaginatedPosts'];
+export type SchemaAvatarModel = components['schemas']['AvatarModel'];
+export type SchemaParentViewModel = components['schemas']['ParentViewModel'];
+export type SchemaCommentsViewModel = components['schemas']['CommentsViewModel'];
+export type SchemaAnswersViewModel = components['schemas']['AnswersViewModel'];
+export type SchemaCreateCommentDto = components['schemas']['CreateCommentDto'];
+export type SchemaPublicationsFollowersWithPaginationViewModel = components['schemas']['PublicationsFollowersWithPaginationViewModel'];
 export type $defs = Record<string, never>;
 export interface operations {
     AuthController_checkPasswordRecovery: {
@@ -1680,6 +1922,35 @@ export interface operations {
             };
         };
     };
+    GithubOauthController_updateTokens: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success, returns new access token and sets refresh token in cookie */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenTypeSwaggerDto"];
+                };
+            };
+            /** @description JWT refreshToken inside cookie is missing, expired or incorrect */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResultDto"];
+                };
+            };
+        };
+    };
     GoogleOAuthController_login: {
         parameters: {
             query?: never;
@@ -1742,13 +2013,13 @@ export interface operations {
                     "application/json": components["schemas"]["TokenTypeSwaggerDto"];
                 };
             };
-            /** @description Incorrect input data */
+            /** @description Authentication errors or registration not confirmed. Possible errors: invalid credentials, email not confirmed */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiErrorResultDto"];
+                    "application/json": components["schemas"]["AuthErrorResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -1756,7 +2027,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedErrorResponseDto"];
+                };
             };
             /** @description More than 5 attempts from one IP-address during 10 seconds */
             429: {
@@ -1875,12 +2148,14 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Incorrect input data by field or reCaptcha */
+            /** @description Validation errors or reCAPTCHA failure. Possible errors: invalid reCAPTCHA, incorrect email format */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["RecaptchaErrorResponseDto"];
+                };
             };
         };
     };
@@ -1926,13 +2201,13 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Incorrect input data */
+            /** @description Validation errors or user already exists. Possible errors: password validation, incorrect email format */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiErrorResultDto"];
+                    "application/json": components["schemas"]["ValidationErrorResponseDto"];
                 };
             };
             /** @description More than 5 attempts from one IP-address during 10 seconds */
@@ -2020,6 +2295,33 @@ export interface operations {
             };
         };
     };
+    AuthController_updateToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenTypeSwaggerDto"];
+                };
+            };
+            /** @description JWT refreshToken inside cookie is missing, expired or incorrect */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AuthController_updateTokens: {
         parameters: {
             query?: never;
@@ -2072,17 +2374,17 @@ export interface operations {
                          *     } */
                         info?: {
                             [key: string]: {
-                                status?: string;
+                                status: string;
                             } & {
-                                [key: string]: string;
+                                [key: string]: unknown;
                             };
                         } | null;
                         /** @example {} */
                         error?: {
                             [key: string]: {
-                                status?: string;
+                                status: string;
                             } & {
-                                [key: string]: string;
+                                [key: string]: unknown;
                             };
                         } | null;
                         /** @example {
@@ -2092,9 +2394,9 @@ export interface operations {
                          *     } */
                         details?: {
                             [key: string]: {
-                                status?: string;
+                                status: string;
                             } & {
-                                [key: string]: string;
+                                [key: string]: unknown;
                             };
                         };
                     };
@@ -2116,9 +2418,9 @@ export interface operations {
                          *     } */
                         info?: {
                             [key: string]: {
-                                status?: string;
+                                status: string;
                             } & {
-                                [key: string]: string;
+                                [key: string]: unknown;
                             };
                         } | null;
                         /** @example {
@@ -2129,9 +2431,9 @@ export interface operations {
                          *     } */
                         error?: {
                             [key: string]: {
-                                status?: string;
+                                status: string;
                             } & {
-                                [key: string]: string;
+                                [key: string]: unknown;
                             };
                         } | null;
                         /** @example {
@@ -2145,9 +2447,9 @@ export interface operations {
                          *     } */
                         details?: {
                             [key: string]: {
-                                status?: string;
+                                status: string;
                             } & {
-                                [key: string]: string;
+                                [key: string]: unknown;
                             };
                         };
                     };
@@ -2378,6 +2680,23 @@ export interface operations {
             };
         };
     };
+    DynamicMetricsController_getMetrics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     NotificationController_updateNotificationsIsRead: {
         parameters: {
             query?: never;
@@ -2522,6 +2841,41 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ApiErrorResultDto"];
                 };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PostsController_getAllPostsNoParam: {
+        parameters: {
+            query?: {
+                /** @description page size is number of items that should be returned */
+                pageSize?: number;
+                /** @description Sort by parameters */
+                sortBy?: string;
+                /** @description Sort by desc or asc */
+                sortDirection?: "asc" | "desc";
+            };
+            header?: never;
+            path: {
+                /** @description ID of the last uploaded post. If endCursorPostId not provided, the first set of posts is returned */
+                endCursorPostId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Posts retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unauthorized */
             401: {
@@ -2704,7 +3058,10 @@ export interface operations {
                 sortDirection?: "asc" | "desc";
             };
             header?: never;
-            path?: never;
+            path: {
+                /** @description Get posts on Username or postId */
+                param: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -3443,12 +3800,14 @@ export interface operations {
                     "application/json": components["schemas"]["PublicProfileViewModel"];
                 };
             };
-            /** @description Profile not found with id 1 */
+            /** @description Profile not found */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["UserErrorResponseDto"];
+                };
             };
         };
     };
@@ -3968,13 +4327,13 @@ export interface operations {
                     "application/json": components["schemas"]["AvatarsViewModel"];
                 };
             };
-            /** @description The inputModel has incorrect values */
+            /** @description File upload errors. Possible errors: file size too large, incorrect file format */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiErrorResultDto"];
+                    "application/json": components["schemas"]["FileUploadErrorResponseDto"];
                 };
             };
             /** @description Unauthorized */
@@ -3982,7 +4341,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["UnauthorizedErrorResponseDto"];
+                };
             };
         };
     };

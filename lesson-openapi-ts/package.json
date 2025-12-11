@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-api": "pnpm openapi-typescript https://inctagram.work/api/v1/swagger-json -o ./src/common/api/schema.ts"
+    "generate-api": "pnpm openapi-typescript https://inctagram.work/api/v1/swagger-json -o ./src/shared/api/schema.ts --root-types"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",

@@ -28,7 +28,7 @@ export const authAPI = createApi({
                     await dispatch(authAPI.endpoints.getMe.initiate());
                 } catch (error) {
                     console.error(error)
-                    throw error
+                    throw error // todo:  must delete it. but first check
                 }
             },
         }),

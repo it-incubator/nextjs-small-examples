@@ -4,7 +4,7 @@ import {useCourses} from "@/components/_api/use-courses";
 import {useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useState} from "react";
 
-export function CoursesListTanstack(props) {
+export function CoursesListTanstack(props: { ssrItems?: { items: Course[] } }) {
 
     const [page, setPage] = useState(1)
 
@@ -27,7 +27,7 @@ export function CoursesListTanstack(props) {
     return (
         <div>
             <h1>Courses</h1>
-            {data?.items.map((c) => <CoursesItem key={c.id} course={c}/>)}
+            {data?.items?.map((c) => <CoursesItem key={c.id} course={c}/>)}
             <button onClick={() => setPage(page + 1)}>next</button>
         </div>
     )

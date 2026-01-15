@@ -1,0 +1,62 @@
+@startuml Access Token Flow
+
+actor User
+participant "Client" as Client
+participant "Auth Server" as Auth
+participant "Resource Server" as Resource
+
+== 1. Login ==
+User -> Client: Enter credentials\n(email, password)
+note right of User
+  User provides login data
+  via form or UI
+end note
+
+Client -> Auth: POST /api/login\n{email, password}
+note right of Client
+  Client sends credentials
+  to Auth Server
+end note
+
+Auth -> Auth: Validate credentials
+note right of Auth
+  - Check if user exists
+  - Verify password hash
+  - Generate JWT token
+end note
+
+Auth --> Client: { accessToken: "eyJhbG..." }
+note left of Auth
+  Server returns JWT token
+  Token contains: userId, exp, etc.
+end note
+
+Client -> Client: Save token
+note right of Client
+  Store token in:
+  - localStorage
+  - cookies
+  - memory
+end note
+
+== 2. Access Protected Resource ==
+Client -> Resource: GET /api/protected\n(Authorization: Bearer <access_token>)
+note right of Client
+  Token sent in header:
+  Authorization: Bearer eyJhbG...
+end note
+
+Resource -> Resource: Validate token
+note right of Resource
+  - Verify JWT signature
+  - Check expiration
+  - Extract user info
+end note
+
+Resource --> Client: Protected data
+note left of Resource
+  If token valid - return data
+  If invalid - return 401 Unauthorized
+end note
+
+@enduml

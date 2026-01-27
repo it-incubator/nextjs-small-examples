@@ -1,0 +1,10 @@
+@startuml Access Token Flow
+
+participant "Client" as Client
+participant "Resource Server" as Resource
+
+Client -> Resource: GET /api/protected\n(Authorization: Bearer <access_token>)
+Resource -> Resource: Validate token
+Resource --> Client: Protected data
+
+@enduml

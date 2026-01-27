@@ -1,17 +1,14 @@
 'use client'
 
-import {ReactElement, ReactNode} from "react";
-import {queryClient, store} from "@/store/store";
-import {Provider} from "react-redux";
-import {QueryClientProvider} from "@tanstack/react-query";
+import {queryClient, store} from '@/store/store';
+import {QueryClientProvider} from '@tanstack/react-query';
+import {PropsWithChildren} from 'react';
+import {Provider} from 'react-redux';
 
-
-type ReactChild = ReactElement | undefined | null | ReactNode;
-
-export const StoreWrapper = ({children}: { children: ReactChild }) => {
-    return <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-            {children}
-        </QueryClientProvider>
+export const StoreWrapper = ({children}: PropsWithChildren) => (
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
     </Provider>
-}
+)

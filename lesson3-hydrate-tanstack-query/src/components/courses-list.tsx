@@ -19,7 +19,7 @@ export function CoursesList(props: Partial<CoursesResponse>) {
 
     const dispatch = useAppDispatch();
 
-    let needHydrateStateRef = useRef(!!props.items && !dataFromCache?.items);
+    const needHydrateStateRef = useRef(!!props.items && !dataFromCache?.items);
 
     const {data, isFetching} = useGetCoursesQuery(page, {
         skip: needHydrateStateRef.current

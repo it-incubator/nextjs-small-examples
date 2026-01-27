@@ -34,6 +34,6 @@ export const queryClient = new QueryClient({
 // This code is for all users
 
 if (typeof window !== 'undefined') {
-// @ts-ignore
+// @ts-expect-error test
     window.__TANSTACK_QUERY_CLIENT__ = queryClient;
 }

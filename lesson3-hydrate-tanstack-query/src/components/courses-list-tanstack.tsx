@@ -1,14 +1,13 @@
 'use client'
-import {Course, useLikeCourseMutation} from "@/store/services/coursesApi";
-import {useCourses} from "@/components/_api/use-courses";
-import {useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {useState} from "react";
 
-export function CoursesListTanstack(props: { ssrItems?: { items: Course[] } }) {
+import {Course} from '@/store/services/coursesApi';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useState} from 'react';
 
+export function CoursesListTanstack(props: { ssrItems?: { items: Course[] }, page?: number, totalPages?: number }) {
     const [page, setPage] = useState(1)
 
-    const {data, isLoading, isFetching} = useQuery({
+    const {data} = useQuery({
         queryKey: ['courses', 'list', {page}],
         initialData: () => {
             if (props.ssrItems && page === 1) {
@@ -16,18 +15,17 @@ export function CoursesListTanstack(props: { ssrItems?: { items: Course[] } }) {
             }
             return undefined;
         },
-        async queryFn(params) {
+        async queryFn() {
             console.log('✈️  queryFn')
             const response = await fetch(`http://localhost:3000/api/courses?page=${page}&limit=5`)
-            const json = await response.json();
-            return json;
+            return await response.json();
         }
     })
 
     return (
         <div>
             <h1>Courses</h1>
-            {data?.items?.map((c) => <CoursesItem key={c.id} course={c}/>)}
+            {data?.items?.map((c: Course) => <CoursesItem key={c.id} course={c}/>)}
             <button onClick={() => setPage(page + 1)}>next</button>
         </div>
     )
@@ -47,12 +45,13 @@ function CoursesItem({course}: { course: Course }) {
                 })
             return response.json()
         },
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['courses', 'list']
             })
         }
     })
+
     return (
         <div key={course.id}>
             <strong>{course.title}</strong> — {course.company}

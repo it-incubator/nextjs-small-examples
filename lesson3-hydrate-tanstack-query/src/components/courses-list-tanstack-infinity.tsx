@@ -1,9 +1,7 @@
 'use client'
 import {Course, useLikeCourseMutation} from "@/store/services/coursesApi";
-import {useCourses} from "@/components/_api/use-courses";
-import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
 
-export function CoursesListTanstackInfinity(props) {
+/*export function CoursesListTanstackInfinity(props: any) {
 
     const {data, isLoading, isFetching, fetchNextPage} = useInfiniteQuery({
         queryKey: ['courses', 'list'],
@@ -51,7 +49,7 @@ export function CoursesListTanstackInfinity(props) {
             )}
         </div>
     )
-}
+}*/
 
 
 function CoursesItem({course}: { course: Course }) {

@@ -1,0 +1,22 @@
+@startuml C4 - Level 2 - Container Diagram
+
+title C4 Level 2 - Container Diagram
+
+actor "User" as user
+
+node "Client\n[React + Vite]\nport 5173" as client {
+}
+
+node "Backend\n[Express.js]\nport 3001" as backend {
+}
+
+database "In-Memory Store\n[JS Object]\nusers, codes" as db
+
+rectangle "Email Service\n[Nodemailer / SMTP]\n(mock: console.log adapter)" as email
+
+user --> client : opens browser
+client --> backend : HTTP requests
+backend --> db : read/write users
+backend --> email : send verification code
+
+@enduml

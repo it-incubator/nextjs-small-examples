@@ -1,0 +1,31 @@
+@startuml C4 - Level 4 - Code Diagram (RegistrationForm)
+
+title C4 Level 4 - Code Diagram: RegistrationForm component
+
+start
+
+:Render form\n- input: email\n- input: password\n- button: "Register";
+
+:User fills email and password\nand clicks "Register";
+
+:Set loading state\nsetLoading(true);
+
+:Send request\nfetch(API_URL + "/register", {\n  method: "POST",\n  body: { email, password }\n});
+
+if (response.ok?) then (yes)
+  :Show success message\n"Check your email for\nverification link";
+else (no)
+  if (status === 409?) then (yes)
+    :Show error\n"User already exists";
+  elseif (status === 400?) then (yes)
+    :Show error\nresponse.message;
+  else (other)
+    :Show error\n"Something went wrong";
+  endif
+endif
+
+:Set loading state\nsetLoading(false);
+
+stop
+
+@enduml

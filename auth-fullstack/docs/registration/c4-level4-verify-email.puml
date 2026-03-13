@@ -1,0 +1,40 @@
+@startuml C4 - Level 4 - Code Diagram (POST /verify-email)
+
+title C4 Level 4 - Code Diagram: POST /verify-email handler
+
+start
+
+:Receive request body\n{ email, code };
+
+if (email or code missing?) then (yes)
+  :Return 400\n{ message: "Email and code are required" };
+  stop
+endif
+
+if (codes[email] not found?) then (yes)
+  :Return 400\n{ message: "No verification code found" };
+  stop
+endif
+
+:storedCode = codes[email];
+
+if (storedCode.expiresAt < Date.now()?) then (yes)
+  :delete codes[email];
+  :Return 400\n{ message: "Code expired" };
+  stop
+endif
+
+if (storedCode.code !== code?) then (yes)
+  :Return 400\n{ message: "Invalid code" };
+  stop
+endif
+
+:users[email].isVerified = true;
+
+:delete codes[email];
+
+:Return 200\n{ message: "Email verified" };
+
+stop
+
+@enduml

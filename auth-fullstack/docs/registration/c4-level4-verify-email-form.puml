@@ -1,0 +1,45 @@
+@startuml C4 - Level 4 - Code Diagram (VerifyEmailForm)
+
+title C4 Level 4 - Code Diagram: VerifyEmailForm component
+
+start
+
+:User clicks verification link in email\n/verify-email?code=XXX&email=YYY;
+
+:Component mounts\nParse query params:\nemail = searchParams.get("email")\ncode = searchParams.get("code");
+
+if (email or code missing?) then (yes)
+  :Show error\n"Invalid verification link";
+  stop
+endif
+
+:Set loading state\nsetLoading(true);
+
+:Send request on mount (useEffect)\nfetch(API_URL + "/verify-email", {\n  method: "POST",\n  body: { email, code }\n});
+
+if (response.ok?) then (yes)
+  :Show success message\n"Email verified!";
+else (no)
+  if (status === 400, message "Code expired"?) then (yes)
+    :Show error\n"Code expired";
+    :Show button\n"Resend verification email";
+  else (other error)
+    :Show error\nresponse.message;
+  endif
+endif
+
+:Set loading state\nsetLoading(false);
+
+if (User clicks "Resend"?) then (yes)
+  :Send request\nfetch(API_URL + "/resend-code", {\n  method: "POST",\n  body: { email }\n});
+
+  if (response.ok?) then (yes)
+    :Show message\n"New verification email sent.\nCheck your inbox.";
+  else (no)
+    :Show error\nresponse.message;
+  endif
+endif
+
+stop
+
+@enduml

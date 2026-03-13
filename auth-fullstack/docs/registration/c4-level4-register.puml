@@ -1,0 +1,40 @@
+@startuml C4 - Level 4 - Code Diagram (POST /register)
+
+title C4 Level 4 - Code Diagram: POST /register handler
+
+start
+
+:Receive request body\n{ email, password };
+
+if (email or password missing?) then (yes)
+  :Return 400\n{ message: "Email and password are required" };
+  stop
+endif
+
+if (email format invalid?) then (yes)
+  :Return 400\n{ message: "Invalid email format" };
+  stop
+endif
+
+if (users[email] already exists?) then (yes)
+  :Return 409\n{ message: "User already exists" };
+  stop
+endif
+
+:Hash password\nconst passwordHash = await bcrypt.hash(password, 10);
+
+:Save user to in-memory store\nusers[email] = {\n  email,\n  passwordHash,\n  isVerified: false\n};
+
+:Generate verification code\nconst code = Math.random()\n  .toString().slice(2, 8);
+
+:Save code with expiration\ncodes[email] = {\n  code,\n  expiresAt: Date.now() + 10 * 60 * 1000\n};
+
+:Build verification link\nconst link = CLIENT_URL +\n  "/verify-email?code=" + code +\n  "&email=" + email;
+
+:Send email via nodemailer\n(mock adapter: logs to console)\ntransporter.sendMail({\n  to: email,\n  subject: "Verify your email",\n  html: "Click: <a href=link>Verify</a>"\n});
+
+:Return 201\n{ message: "User registered, check email" };
+
+stop
+
+@enduml

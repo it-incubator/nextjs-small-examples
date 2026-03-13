@@ -1,0 +1,36 @@
+@startuml C4 - Level 4 - Code Diagram (POST /resend-code)
+
+title C4 Level 4 - Code Diagram: POST /resend-code handler
+
+start
+
+:Receive request body\n{ email };
+
+if (email missing?) then (yes)
+  :Return 400\n{ message: "Email is required" };
+  stop
+endif
+
+if (users[email] not found?) then (yes)
+  :Return 404\n{ message: "User not found" };
+  stop
+endif
+
+if (users[email].isVerified === true?) then (yes)
+  :Return 400\n{ message: "Email already verified" };
+  stop
+endif
+
+:Generate new verification code\nconst code = Math.random()\n  .toString().slice(2, 8);
+
+:Save code with expiration\ncodes[email] = {\n  code,\n  expiresAt: Date.now() + 10 * 60 * 1000\n};
+
+:Build verification link\nconst link = CLIENT_URL +\n  "/verify-email?code=" + code +\n  "&email=" + email;
+
+:Send email via nodemailer\n(mock adapter: logs to console)\ntransporter.sendMail({\n  to: email,\n  subject: "Verify your email",\n  html: "Click: <a href=link>Verify</a>"\n});
+
+:Return 200\n{ message: "Code resent" };
+
+stop
+
+@enduml

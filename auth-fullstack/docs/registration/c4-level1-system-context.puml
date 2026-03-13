@@ -1,0 +1,19 @@
+@startuml C4 - Auth Flow (Registration + Email Verification)
+
+' ============================================
+' C4 Level 1 - System Context Diagram
+' ============================================
+
+title C4 Level 1 - System Context
+
+actor "User" as user
+
+rectangle "Auth Fullstack App" as system {
+}
+
+rectangle "Email Service\n[Nodemailer / SMTP]\n(mock: console.log adapter)" as email
+
+user --> system : registers, verifies email
+system --> email : sends verification code
+
+@enduml

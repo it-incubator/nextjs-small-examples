@@ -1,0 +1,42 @@
+@startuml C4 - Level 3 - Component Diagram (Client)
+
+title C4 Level 3 - Component Diagram (Client - React)
+
+package "React App" {
+
+  component "RegistrationForm" as regForm {
+  }
+  note right of regForm
+    Fields: email, password
+    On submit: POST /register
+    On success: show "Check your email"
+  end note
+
+  component "VerifyEmailForm" as verifyForm {
+  }
+  note right of verifyForm
+    Opened via link from email
+    e.g. /verify-email?code=XXX&email=YYY
+    On mount: POST /verify-email
+    Button: "Resend code" -> POST /resend-code
+    On success: show "Email verified!"
+  end note
+}
+
+actor "User" as user
+
+rectangle "Email\n(inbox)" as inbox
+
+node "Backend API\nhttp://localhost:3001" as api
+
+user --> regForm : fills email + password
+regForm --> api : POST /register
+api --> inbox : sends email with verification link
+
+user --> inbox : opens email, clicks link
+inbox --> verifyForm : navigates to /verify-email?code=XXX&email=YYY
+
+verifyForm --> api : POST /verify-email
+verifyForm --> api : POST /resend-code
+
+@enduml

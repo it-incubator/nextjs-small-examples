@@ -1,0 +1,61 @@
+@startuml C4 - Level 3 - Component Diagram (Backend)
+
+title C4 Level 3 - Component Diagram (Backend - Express.js)
+
+package "Express App (src/index.ts)" {
+
+  component "POST /register" as register {
+  }
+  note right of register
+    1. Receive { email, password }
+    2. Validate input
+    3. Check if user already exists
+    4. Hash password
+    5. Save user (isVerified: false)
+    6. Generate 6-digit verification code
+    7. Save code linked to user email
+    8. Send code via email
+    9. Return 201 { message: "User registered, check email" }
+  end note
+
+  component "POST /verify-email" as verify {
+  }
+  note right of verify
+    1. Receive { email, code }
+    2. Find stored code for email
+    3. Check if code matches and not expired
+    4. Set user.isVerified = true
+    5. Delete used code
+    6. Return 200 { message: "Email verified" }
+  end note
+
+  component "POST /resend-code" as resend {
+  }
+  note right of resend
+    1. Receive { email }
+    2. Check user exists and not verified
+    3. Generate new 6-digit code
+    4. Send code via email
+    5. Return 200 { message: "Code resent" }
+  end note
+}
+
+database "In-Memory Store" as db {
+  collections "users[]\n{ email, passwordHash, isVerified }" as users
+  collections "codes[]\n{ email, code, expiresAt }" as codes
+}
+
+rectangle "Nodemailer\n[SMTP Transport]\n(mock: console.log adapter)" as email
+
+register --> users : save new user
+register --> codes : save verification code
+register --> email : send code
+
+verify --> codes : lookup & validate code
+verify --> users : set isVerified = true
+
+resend --> users : check user exists
+resend --> codes : save new code
+resend --> email : send code
+
+@enduml

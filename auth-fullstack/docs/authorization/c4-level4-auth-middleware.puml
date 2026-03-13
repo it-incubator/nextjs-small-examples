@@ -1,0 +1,38 @@
+@startuml C4 - Level 4 - Code Diagram (authMiddleware)
+
+title C4 Level 4 - Code Diagram: authMiddleware
+
+start
+
+:Read Authorization header\nconst authHeader = req.headers.authorization;
+
+if (authHeader missing or\nnot starts with "Bearer "?) then (yes)
+  :Return 401\n{ message: "Access token required" };
+  stop
+endif
+
+:Extract token\nconst accessToken = authHeader.split(" ")[1];
+
+:Verify JWT\ntry {\n  decoded = jwt.verify(\n    accessToken,\n    ACCESS_TOKEN_SECRET\n  )\n};
+
+if (JWT verification failed?) then (yes)
+  if (error.name === "TokenExpiredError"?) then (yes)
+    :Return 401\n{ message: "Access token expired" };
+    note right
+      Client should call
+      POST /refresh-tokens
+      and retry the request
+    end note
+  else (other error)
+    :Return 401\n{ message: "Invalid access token" };
+  endif
+  stop
+endif
+
+:Attach user to request\nreq.user = { email: decoded.email };
+
+:Call next()\nProceed to route handler;
+
+stop
+
+@enduml

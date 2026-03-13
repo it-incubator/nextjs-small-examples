@@ -1,0 +1,44 @@
+@startuml C4 - Level 3 - Component Diagram (Client - Authorization)
+
+title C4 Level 3 - Component Diagram (Client - React)
+
+package "React App" {
+
+  component "LoginForm" as loginForm {
+  }
+  note right of loginForm
+    Fields: email, password
+    On submit: POST /login
+    On success: store accessToken in memory,
+    redirect to protected page
+  end note
+
+  component "AuthProvider" as authProvider {
+  }
+  note right of authProvider
+    Stores accessToken in React state
+    Provides: login(), logout(), getAccessToken()
+    Auto-refreshes tokens before expiration
+    Attaches accessToken to every request
+  end note
+
+  component "ProtectedPage" as protectedPage {
+  }
+  note right of protectedPage
+    Uses accessToken from AuthProvider
+    If 401 -> triggers token refresh
+    If refresh fails -> redirect to /login
+  end note
+}
+
+actor "User" as user
+
+node "Backend API\nhttp://localhost:3001" as api
+
+user --> loginForm : fills email + password
+loginForm --> authProvider : on success: stores accessToken
+authProvider --> api : POST /refresh-tokens\n(Cookie: refreshToken)
+authProvider --> protectedPage : provides accessToken
+protectedPage --> api : GET /protected\nAuthorization: Bearer <accessToken>
+
+@enduml

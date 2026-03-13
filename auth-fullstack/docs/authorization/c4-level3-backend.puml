@@ -1,0 +1,79 @@
+@startuml C4 - Level 3 - Component Diagram (Backend - Authorization)
+
+title C4 Level 3 - Component Diagram (Backend - Express.js)
+
+package "Express App (src/index.ts)" {
+
+  component "POST /login" as login {
+  }
+  note right of login
+    1. Receive { email, password }
+    2. Validate input
+    3. Find user by email
+    4. Check if user.isVerified === true
+    5. Compare password with hash (bcrypt)
+    6. Generate accessToken (JWT, 15min)
+    7. Generate refreshToken (JWT, 7 days)
+    8. Save refreshToken in store
+    9. Set refreshToken as httpOnly cookie
+    10. Return 200 { accessToken }
+  end note
+
+  component "POST /refresh-tokens" as refresh {
+  }
+  note right of refresh
+    1. Read refreshToken from cookie
+    2. Verify refreshToken (JWT)
+    3. Check if token exists in store
+    4. Delete old refreshToken from store
+    5. Generate new accessToken (15min)
+    6. Generate new refreshToken (7 days)
+    7. Save new refreshToken in store
+    8. Set new refreshToken as httpOnly cookie
+    9. Return 200 { accessToken }
+  end note
+
+  component "POST /logout" as logout {
+  }
+  note right of logout
+    1. Read refreshToken from cookie
+    2. Delete refreshToken from store
+    3. Clear refreshToken cookie
+    4. Return 200 { message: "Logged out" }
+  end note
+
+  component "authMiddleware" as middleware {
+  }
+  note right of middleware
+    1. Read Authorization header
+    2. Extract Bearer token
+    3. Verify accessToken (JWT)
+    4. Attach user email to req.user
+    5. Call next()
+    If invalid/expired -> Return 401
+  end note
+
+  component "GET /protected" as protected {
+  }
+  note right of protected
+    Uses authMiddleware
+    Returns user-specific data
+    e.g. { message: "Hello, user@email.com" }
+  end note
+}
+
+database "In-Memory Store" as db {
+  collections "users[]\n{ email, passwordHash, isVerified }" as users
+  collections "refreshTokens[]\n{ email, token }" as tokens
+}
+
+login --> users : find user, verify password
+login --> tokens : save refreshToken
+
+refresh --> tokens : validate & rotate refreshToken
+
+logout --> tokens : delete refreshToken
+
+middleware -[hidden]-> protected
+
+@enduml

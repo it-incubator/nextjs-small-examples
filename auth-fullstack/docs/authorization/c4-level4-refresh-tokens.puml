@@ -1,0 +1,52 @@
+@startuml C4 - Level 4 - Code Diagram (POST /refresh-tokens)
+
+title C4 Level 4 - Code Diagram: POST /refresh-tokens handler
+
+start
+
+:Read refreshToken from cookie\nconst { refreshToken } = req.cookies;
+
+if (refreshToken missing?) then (yes)
+  :Return 401\n{ message: "No refresh token" };
+  stop
+endif
+
+:Verify JWT\ntry {\n  decoded = jwt.verify(\n    refreshToken,\n    REFRESH_TOKEN_SECRET\n  )\n};
+
+if (JWT verification failed?) then (yes)
+  :Clear cookie\nres.clearCookie("refreshToken");
+  :Return 401\n{ message: "Invalid refresh token" };
+  stop
+endif
+
+:email = decoded.email;
+
+if (refreshTokens[email] !== refreshToken?) then (yes)
+  :Token not in store (reuse detected)\ndelete refreshTokens[email];
+  :Clear cookie\nres.clearCookie("refreshToken");
+  :Return 401\n{ message: "Token reuse detected" };
+  stop
+endif
+
+note right
+  **Token Rotation:**
+  Old refresh token is deleted,
+  new pair is generated.
+  This prevents replay attacks.
+end note
+
+:Delete old refresh token\ndelete refreshTokens[email];
+
+:Generate new access token\nconst newAccessToken = jwt.sign(\n  { email },\n  ACCESS_TOKEN_SECRET,\n  { expiresIn: "15m" }\n);
+
+:Generate new refresh token\nconst newRefreshToken = jwt.sign(\n  { email },\n  REFRESH_TOKEN_SECRET,\n  { expiresIn: "7d" }\n);
+
+:Save new refresh token\nrefreshTokens[email] = newRefreshToken;
+
+:Set new httpOnly cookie\nres.cookie("refreshToken", newRefreshToken, {\n  httpOnly: true,\n  secure: true,\n  sameSite: "strict",\n  maxAge: 7 * 24 * 60 * 60 * 1000\n});
+
+:Return 200\n{ accessToken: newAccessToken };
+
+stop
+
+@enduml

@@ -3,7 +3,7 @@
 export async function fetchPokemon() {
 
     const count = 30;
-    await delay(2000);
+    await delay(5000);
     // Шаг 2. Генерируем случайный ID и запрашиваем покемона
     const randomId = Math.floor(Math.random() * count) + 1;
     const pokeRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}/`);

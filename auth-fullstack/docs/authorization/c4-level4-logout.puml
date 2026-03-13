@@ -1,0 +1,26 @@
+@startuml C4 - Level 4 - Code Diagram (POST /logout)
+
+title C4 Level 4 - Code Diagram: POST /logout handler
+
+start
+
+:Read refreshToken from cookie\nconst { refreshToken } = req.cookies;
+
+if (refreshToken missing?) then (yes)
+  :Return 200\n{ message: "Already logged out" };
+  stop
+endif
+
+:Verify JWT (ignore expiration)\ntry {\n  decoded = jwt.verify(\n    refreshToken,\n    REFRESH_TOKEN_SECRET\n  )\n};
+
+if (JWT valid and decoded.email exists?) then (yes)
+  :Delete refresh token from store\ndelete refreshTokens[decoded.email];
+endif
+
+:Clear httpOnly cookie\nres.clearCookie("refreshToken", {\n  httpOnly: true,\n  secure: true,\n  sameSite: "strict"\n});
+
+:Return 200\n{ message: "Logged out" };
+
+stop
+
+@enduml

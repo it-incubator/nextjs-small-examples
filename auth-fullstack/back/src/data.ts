@@ -15,3 +15,8 @@ export type Code = {
 
 export const users: Record<string, User> = {}
 export const codes: Record<string, Code> = {}
+
+// refreshTokens: email -> token string
+// When a user logs in, we save their refresh token here.
+// On /refresh-tokens, we delete the old one and save a new one (token rotation).
+export const refreshTokens: Record<string, string> = {}

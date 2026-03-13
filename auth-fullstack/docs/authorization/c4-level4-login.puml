@@ -1,0 +1,45 @@
+@startuml C4 - Level 4 - Code Diagram (POST /login)
+
+title C4 Level 4 - Code Diagram: POST /login handler
+
+start
+
+:Receive request body\n{ email, password };
+
+if (email or password missing?) then (yes)
+  :Return 400\n{ message: "Email and password are required" };
+  stop
+endif
+
+if (users[email] not found?) then (yes)
+  :Return 401\n{ message: "Invalid email or password" };
+  stop
+endif
+
+:user = users[email];
+
+if (user.isVerified === false?) then (yes)
+  :Return 403\n{ message: "Email not verified" };
+  stop
+endif
+
+:Compare passwords\nconst isMatch = await bcrypt.compare(\n  password, user.passwordHash\n);
+
+if (isMatch === false?) then (yes)
+  :Return 401\n{ message: "Invalid email or password" };
+  stop
+endif
+
+:Generate access token\nconst accessToken = jwt.sign(\n  { email },\n  ACCESS_TOKEN_SECRET,\n  { expiresIn: "15m" }\n);
+
+:Generate refresh token\nconst refreshToken = jwt.sign(\n  { email },\n  REFRESH_TOKEN_SECRET,\n  { expiresIn: "7d" }\n);
+
+:Save refresh token in store\nrefreshTokens[email] = refreshToken;
+
+:Set httpOnly cookie\nres.cookie("refreshToken", refreshToken, {\n  httpOnly: true,\n  secure: true,\n  sameSite: "strict",\n  maxAge: 7 * 24 * 60 * 60 * 1000\n});
+
+:Return 200\n{ accessToken };
+
+stop
+
+@enduml

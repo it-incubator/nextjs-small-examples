@@ -1,29 +1,39 @@
 import { useState, type FormEvent } from 'react'
-import { useRegisterMutation } from './hooks'
+import { useNavigate } from 'react-router-dom'
+import { useLoginMutation } from './hooks'
 
-export function RegistrationForm() {
+// --- LoginForm ---
+// Uses useLoginMutation() instead of AuthContext.
+// TanStack Query handles loading/error states automatically.
+export function LoginForm() {
   const [email, setEmail] = useState('test@example.com')
   const [password, setPassword] = useState('123456')
 
-  const registerMutation = useRegisterMutation()
+  const navigate = useNavigate()
+  const loginMutation = useLoginMutation()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    registerMutation.mutate({ email, password })
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => navigate('/protected'),
+      },
+    )
   }
 
-  const error = registerMutation.error as any
-  const errorMessage = error?.response?.status === 409
-    ? 'User already exists'
-    : error?.response?.status === 400
-      ? error.response.data.message
+  const error = loginMutation.error as any
+  const errorMessage = error?.response?.status === 401
+    ? 'Invalid email or password'
+    : error?.response?.status === 403
+      ? 'Please verify your email first'
       : error
         ? 'Something went wrong'
         : ''
 
   return (
     <div>
-      <h1>Register</h1>
+      <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>
@@ -45,12 +55,11 @@ export function RegistrationForm() {
             required
           />
         </div>
-        <button type="submit" disabled={registerMutation.isPending}>
-          {registerMutation.isPending ? 'Registering...' : 'Register'}
+        <button type="submit" disabled={loginMutation.isPending}>
+          {loginMutation.isPending ? 'Logging in...' : 'Login'}
         </button>
       </form>
 
-      {registerMutation.isSuccess && <p style={{ color: 'green' }}>Check your email for verification link!</p>}
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
     </div>
   )

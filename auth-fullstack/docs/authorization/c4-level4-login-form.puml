@@ -1,0 +1,33 @@
+@startuml C4 - Level 4 - Code Diagram (LoginForm)
+
+title C4 Level 4 - Code Diagram: LoginForm component
+
+start
+
+:Render form\n- input: email\n- input: password\n- button: "Login";
+
+:User fills email and password\nand clicks "Login";
+
+:Set loading state\nsetLoading(true);
+
+:Send request\nfetch(API_URL + "/login", {\n  method: "POST",\n  credentials: "include",\n  body: { email, password }\n});
+
+if (response.ok?) then (yes)
+  :Parse response\nconst { accessToken } = await response.json();
+  :Store accessToken in AuthProvider\nsetAccessToken(accessToken);
+  :Redirect to protected page\nnavigate("/protected");
+else (no)
+  if (status === 401?) then (yes)
+    :Show error\n"Invalid email or password";
+  elseif (status === 403?) then (yes)
+    :Show error\n"Please verify your email first";
+  else (other)
+    :Show error\n"Something went wrong";
+  endif
+endif
+
+:Set loading state\nsetLoading(false);
+
+stop
+
+@enduml

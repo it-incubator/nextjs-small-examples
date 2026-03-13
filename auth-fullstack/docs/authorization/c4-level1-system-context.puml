@@ -1,0 +1,19 @@
+@startuml C4 - Auth Flow (Login + JWT Tokens)
+
+' ============================================
+' C4 Level 1 - System Context Diagram
+' ============================================
+
+title C4 Level 1 - System Context (Authorization)
+
+actor "User" as user
+
+rectangle "Auth Fullstack App" as system {
+}
+
+user --> system : logs in with email + password
+system --> user : returns access token (short-lived)\nand refresh token (long-lived)
+user --> system : accesses protected resources\nwith access token
+user --> system : refreshes tokens when\naccess token expires
+
+@enduml

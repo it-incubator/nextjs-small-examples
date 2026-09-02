@@ -10,6 +10,6 @@ export const useMyPlaylistsQuery = (enabled: boolean) => {
       if (error) throw error
       return data
     },
-    enabled,
+    // enabled,
   })
 }

@@ -29,6 +29,8 @@ async function refreshTokens() {
   const { accessToken, refreshToken: newRefreshToken } = await res.json()
   await authStorage.saveAccessToken(accessToken)
   await authStorage.saveRefreshToken(newRefreshToken)
+
+  return accessToken as string
 }
 
 const authMiddleware: Middleware = {
@@ -39,12 +41,18 @@ const authMiddleware: Middleware = {
     }
     return request
   },
-  async onResponse({ response }) {
+  async onResponse({ request, response }) {
     if (response.status === 401) {
       const token = await authStorage.getAccessToken();
 
       if (token) {
-        await refreshTokens()
+        const newToken = await refreshTokens()
+        if (newToken) {
+          const retryRequest = new Request(request)
+          retryRequest.headers.set('Authorization', `Bearer ${newToken}`)
+           const newResponse = await fetch(retryRequest)
+           return newResponse
+        }
       } else {
         // do nothing
       }

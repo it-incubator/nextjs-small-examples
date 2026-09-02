@@ -13,7 +13,13 @@ export function MyPlaylists() {
       {!isLoggedIn && <p>need authorization</p>}
       {isLoggedIn && isPending && <p>loading…</p>}
       {isLoggedIn && isError && <pre style={{ color: 'crimson' }}>{JSON.stringify(error, null, 2)}</pre>}
-      {isLoggedIn && data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      {isLoggedIn && data && (
+        <ul>
+          {data.data.map((p) => (
+            <li key={p.id}>{p.attributes.title}</li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }

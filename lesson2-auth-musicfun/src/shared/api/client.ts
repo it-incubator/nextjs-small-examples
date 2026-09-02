@@ -1,4 +1,5 @@
 import createClient, { type Middleware } from 'openapi-fetch'
+import { Mutex } from 'async-mutex'
 
 import type { paths } from './schema'
 import { authStorage } from './authStorage'
@@ -13,9 +14,11 @@ export const apiClient = createClient<paths>({
   },
 })
 
+const mutex = new Mutex()
+
 async function refreshTokens() {
   const refreshToken = await authStorage.getRefreshToken()
-  if (!refreshToken) return
+  if (!refreshToken) return null
 
   const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
     method: 'POST',
@@ -25,16 +28,25 @@ async function refreshTokens() {
     },
     body: JSON.stringify({ refreshToken }),
   })
+  if (!res.ok) return null
 
   const { accessToken, refreshToken: newRefreshToken } = await res.json()
   await authStorage.saveAccessToken(accessToken)
   await authStorage.saveRefreshToken(newRefreshToken)
-
   return accessToken as string
+}
+
+async function retryWithToken(request: Request, token: string) {
+  const retryRequest = new Request(request)
+  retryRequest.headers.set('Authorization', `Bearer ${token}`)
+  return fetch(retryRequest)
 }
 
 const authMiddleware: Middleware = {
   async onRequest({ request }) {
+    // wait until any in-progress refresh finishes (without locking the mutex)
+    await mutex.waitForUnlock()
+
     const token = await authStorage.getAccessToken()
     if (token) {
       request.headers.set('Authorization', `Bearer ${token}`)
@@ -42,22 +54,31 @@ const authMiddleware: Middleware = {
     return request
   },
   async onResponse({ request, response }) {
-    if (response.status === 401) {
-      const token = await authStorage.getAccessToken();
+    if (response.status !== 401) return response
 
-      if (token) {
+    // no refresh in progress → this request owns the refresh
+    if (!mutex.isLocked()) {
+      const release = await mutex.acquire()
+      try {
         const newToken = await refreshTokens()
         if (newToken) {
-          const retryRequest = new Request(request)
-          retryRequest.headers.set('Authorization', `Bearer ${newToken}`)
-           const newResponse = await fetch(retryRequest)
-           return newResponse
+          return await retryWithToken(request, newToken)
         }
-      } else {
-        // do nothing
+        // refresh failed → log out
+        await authStorage.clearTokens()
+        return response
+      } finally {
+        release()
       }
+    } else {
+      // a refresh is already happening → wait for it, then retry with the fresh token
+      await mutex.waitForUnlock()
+      const newToken = await authStorage.getAccessToken()
+      if (newToken) {
+        return await retryWithToken(request, newToken)
+      }
+      return response
     }
-    return response
   },
 }
 

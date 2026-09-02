@@ -13,6 +13,24 @@ export const apiClient = createClient<paths>({
   },
 })
 
+async function refreshTokens() {
+  const refreshToken = await authStorage.getRefreshToken()
+  if (!refreshToken) return
+
+  const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'API-KEY': API_KEY,
+    },
+    body: JSON.stringify({ refreshToken }),
+  })
+
+  const { accessToken, refreshToken: newRefreshToken } = await res.json()
+  await authStorage.saveAccessToken(accessToken)
+  await authStorage.saveRefreshToken(newRefreshToken)
+}
+
 const authMiddleware: Middleware = {
   async onRequest({ request }) {
     const token = await authStorage.getAccessToken()
@@ -20,6 +38,18 @@ const authMiddleware: Middleware = {
       request.headers.set('Authorization', `Bearer ${token}`)
     }
     return request
+  },
+  async onResponse({ response }) {
+    if (response.status === 401) {
+      const token = await authStorage.getAccessToken();
+
+      if (token) {
+        await refreshTokens()
+      } else {
+        // do nothing
+      }
+    }
+    return response
   },
 }
 

@@ -1,0 +1,37 @@
+@startuml OAuthGitHubDynamic
+
+title OAuth Login via GitHub — Dynamic View
+
+skinparam rectangle {
+    BackgroundColor #FFFFFF
+    BorderColor #1168BD
+    FontColor #1168BD
+}
+skinparam actor {
+    BorderColor #08427B
+    FontColor #08427B
+}
+skinparam ArrowColor #707070
+skinparam ArrowFontColor #303030
+
+actor "User" as user
+
+rectangle "**Frontend**\n//User Agent / SPA//\nit-kamasutra.com\nСтраница логина с кнопкой\n'Login with GitHub'" as frontend
+rectangle "**Backend**\n//OAuth Client + API//\nit-kamasutra.com\nИнициирует OAuth,\nобменивает code на токены,\nвыдаёт app-токены,\nотдаёт защищённые ресурсы" as backend
+rectangle "**GitHub**\n//OAuth Provider//\nAuthorization Server" as github #LightGray
+
+user --> frontend : 1. Нажимает 'Login with GitHub'
+frontend --> backend : 2. GET /auth/provider?type=github\n&redirect_front_uri
+backend --> github : 3. redirect → GET /login/oauth/authorize\n{ response_type=code, client_id,\nredirect_back_uri, scope }
+github --> user : 4. Форма логина и запрос прав
+user --> github : 5. Вводит учётные данные\nи подтверждает доступ
+github --> backend : 6. redirect → backend_redirect_uri\n?code=AUTH_CODE
+backend --> github : 7. POST /login/oauth/access_token\n{ client_id, client_secret, code, redirect_uri }
+github --> backend : 8. resp: { ext_access_token,\next_refresh_token? }
+backend --> github : 9. GET /user\nAuthorization: Bearer ext_access_token
+github --> backend : 10. resp: { id, login, email,\navatar_url, ... }
+backend --> frontend : 11. resp: { app_access_token,\napp_refresh_token }\n(refresh в httpOnly cookie)
+frontend --> backend : 12. GET /api/profile\nAuthorization: Bearer app_access_token
+backend --> frontend : 13. resp: { user profile }
+
+@enduml

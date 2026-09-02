@@ -1,4 +1,9 @@
+import {delay} from "@/app/api/auth/refresh/route";
+
 export async function GET(req: Request) {
+  // same delay as /auth/me so that, when the access token is expired, both
+  // requests receive 401 at ~the same moment → the refresh flow overlaps
+  await delay(3000)
   const headers = req.headers
   const authorizationHeader = headers.get('Authorization');
   if (!authorizationHeader) {

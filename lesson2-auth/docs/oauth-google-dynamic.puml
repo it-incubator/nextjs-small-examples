@@ -1,0 +1,37 @@
+@startuml OAuthGoogleDynamic
+
+title OAuth Login via Google — Dynamic View
+
+skinparam rectangle {
+    BackgroundColor #FFFFFF
+    BorderColor #1168BD
+    FontColor #1168BD
+}
+skinparam actor {
+    BorderColor #08427B
+    FontColor #08427B
+}
+skinparam ArrowColor #707070
+skinparam ArrowFontColor #303030
+
+actor "User" as user
+
+rectangle "**Frontend**\n//User Agent / SPA//\nit-kamasutra.com\nСтраница логина с кнопкой\n'Login with Google'" as frontend
+rectangle "**Backend**\n//OAuth Client + API//\nit-kamasutra.com\nОбменивает code на токены,\nвыдаёт app-токены,\nотдаёт защищённые ресурсы" as backend
+rectangle "**Google**\n//OAuth Provider//\nAuthorization Server" as google #LightGray
+
+user --> frontend : 1. Нажимает 'Login with Google'
+frontend --> google : 2. redirect → GET https://accounts.google.com/o/oauth2/v2/auth\n{ client_id, redirect_uri, response_type=code,\nscope=openid email profile, access_type=offline }
+google --> user : 3. Форма логина и запрос прав
+user --> google : 4. Вводит учётные данные\nи подтверждает доступ
+google --> frontend : 5. redirect → frontend_redirect_uri\n?code=AUTH_CODE
+frontend --> backend : 6. POST /auth/callback\n{ code: AUTH_CODE }
+backend --> google : 7. POST /token\n{ grant_type=authorization_code, code,\nclient_id, client_secret, redirect_uri }
+google --> backend : 8. resp: { ext_access_token,\next_refresh_token, expires_in }
+backend --> google : 9. GET /userinfo\nAuthorization: Bearer ext_access_token
+google --> backend : 10. resp: { sub, email, name,\npicture, ... }
+backend --> frontend : 11. resp: { app_access_token,\napp_refresh_token }\n(refresh в httpOnly cookie)
+frontend --> backend : 12. GET /api/profile\nAuthorization: Bearer app_access_token
+backend --> frontend : 13. resp: { user profile }
+
+@enduml

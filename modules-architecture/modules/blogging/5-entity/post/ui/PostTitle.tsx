@@ -1,0 +1,1 @@
+export const PostTitle = () => <div>Post</div>

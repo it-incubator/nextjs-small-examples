@@ -2,9 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { apiClient } from '@/shared/api/client'
 
-// GET /playlists/my — the playlists that belong to the current user.
-// Also needs a valid access token (Bearer).
-export const useMyPlaylistsQuery = () => {
+export const useMyPlaylistsQuery = (enabled: boolean) => {
   return useQuery({
     queryKey: ['playlists', 'my'],
     queryFn: async () => {
@@ -12,5 +10,6 @@ export const useMyPlaylistsQuery = () => {
       if (error) throw error
       return data
     },
+    enabled,
   })
 }

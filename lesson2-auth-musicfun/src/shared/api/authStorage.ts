@@ -7,21 +7,21 @@ const keys = {
 } as const
 
 export const authStorage = {
-  getAccessToken(): string | null {
+  async getAccessToken(): Promise<string | null> {
     if (typeof window === 'undefined') return null // no localStorage on the server
     return localStorage.getItem(keys.accessToken)
   },
-  saveAccessToken(token: string) {
+  async saveAccessToken(token: string) {
     localStorage.setItem(keys.accessToken, token)
   },
-  getRefreshToken(): string | null {
+  async getRefreshToken(): Promise<string | null> {
     if (typeof window === 'undefined') return null
     return localStorage.getItem(keys.refreshToken)
   },
-  saveRefreshToken(token: string) {
+  async saveRefreshToken(token: string) {
     localStorage.setItem(keys.refreshToken, token)
   },
-  clearTokens() {
+  async clearTokens() {
     localStorage.removeItem(keys.accessToken)
     localStorage.removeItem(keys.refreshToken)
   },

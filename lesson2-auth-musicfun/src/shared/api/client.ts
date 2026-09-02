@@ -14,8 +14,8 @@ export const apiClient = createClient<paths>({
 })
 
 const authMiddleware: Middleware = {
-  onRequest({ request }) {
-    const token = authStorage.getAccessToken()
+  async onRequest({ request }) {
+    const token = await authStorage.getAccessToken()
     if (token) {
       request.headers.set('Authorization', `Bearer ${token}`)
     }
